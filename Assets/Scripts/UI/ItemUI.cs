@@ -1,26 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SpellItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    [SerializeField] Transform _parentForDragging;
-    SpellSlot _currentSlot;
-    SpellSlot _lastSlot;
+    public Transform ParentForDragging;
+    public InventoryItem Item { get; set; }
+    public SlotUI CurrentSlot { get; set; }
+
     Camera _camera;
     CanvasGroup _canvasGroup;
+    bool _isBeingTransferred;
+
     private void Start()
     {
         _camera = Camera.main;
         _canvasGroup = GetComponent<CanvasGroup>();
     }
+
+    public void AssigntToSlot(SlotUI slot)
+    {
+        CurrentSlot = slot;
+        _isBeingTransferred = false;
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        _isBeingTransferred = true;
         _canvasGroup.blocksRaycasts = false;
-        transform.SetParent(_parentForDragging);
-        _lastSlot = _currentSlot;
-        _currentSlot = null;
+        transform.SetParent(ParentForDragging);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -33,12 +41,9 @@ public class SpellItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         _canvasGroup.blocksRaycasts = true;
-        if(_currentSlot == null)
+        if (_isBeingTransferred)
         {
-            _lastSlot.AcceptSpell(this);
+            CurrentSlot.AcceptItem(this);
         }
     }
-
-    public void AssigntToSlot(SpellSlot slot) => _currentSlot = slot;
-
 }
