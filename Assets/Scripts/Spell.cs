@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spell : MonoBehaviour
+public class Spell : AItemObject
 {
 
     [SerializeField] float speed = 3;
@@ -31,4 +31,6 @@ public class Spell : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
     }
+
+    public override void Init(InventoryItem item) { }
 }
