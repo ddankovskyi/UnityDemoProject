@@ -1,180 +1,110 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-
-public class InventoryManager : IGlobalManager
+public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem 
 {
+    InventoryData<T> data;
+    Dictionary<string, T> Items => data.Items;
+    Dictionary<string, System.Type> TypeSlots => data.TypeSlots;
 
-    public const string DEFAULT_PAGE_ID = "defaultInvetoryPageId";
-    InventoryData _data;
-    ICompatibilityChecker _checker = new DefaultChecker();
-
-    public void Save() { }
-    public void Load() { }
-    public void Init()
+    public bool CheckCompatibility(string slotId, T item)
     {
-        DebugLoad();
-    }
-    public bool CreateSlot(string slotId, string typeId = null) => CreateSlot(DEFAULT_PAGE_ID, slotId, typeId);
-    public bool CreateSlot(string pageId, string slotId, string typeId)
-    {
-        var slot = new InventorySlot
-        {
-            TypeId = typeId
-        };
-
-        if (_data.InventoryPages[pageId].ContainsKey(slotId))
-        {
-            Debug.Log($"Slot with id {slotId} already exist on page {pageId}");
-            return false;
-        }
-        _data.InventoryPages[pageId][slotId] = slot;
-        return true;
-
-    }
-    public bool SwapItems(string slot1Id, string slot2Id) => SwapItems(DEFAULT_PAGE_ID, slot1Id, DEFAULT_PAGE_ID, slot2Id);
-    public bool SwapItems(string page1Id, string slot1Id, string page2Id, string slot2Id)
-    {
-        var slot1 = GetSlot(page1Id, slot1Id);
-        if (slot1 == null) return false;
-        var slot2 = GetSlot(page2Id, slot2Id);
-        if (slot2 == null) return false;
-
-        bool isCompatible = true;
-
-        if (slot1.Content != null)
-            isCompatible &= _checker.CheckCompatibility(slot2.TypeId, slot1.Content.TypeId);
-        if (slot2.Content != null)
-            isCompatible &= _checker.CheckCompatibility(slot1.TypeId, slot2.Content.TypeId);
-
-        if (!isCompatible) return false;
-
-        var item = slot1.Content;
-        slot1.Content = slot2.Content;
-        slot2.Content = item;
-        return true;
-
+        TypeSlots.TryGetValue(slotId, out var existingSlotType);
+        return existingSlotType == null || existingSlotType.IsInstanceOfType(item);
     }
 
-    public bool PutItem(string slotId, InventoryItem item) => PutItem(DEFAULT_PAGE_ID, slotId, item);
-    public bool PutItem(string pageId, string slotId, InventoryItem item)
+    public bool Place(string slotId, T item)
     {
-
-        var slot = GetSlot(pageId, slotId);
-        if (slot == null) return false;
-
         if (item == null)
         {
-            slot.Content = null;
+            Debug.Log("Null item can't be placed. Use Extract instead");
+            return false;
+        }
+
+        if (!CheckCompatibility(slotId, item)) return false;
+
+        Items.TryGetValue(slotId, out var existingitem);
+        if (existingitem == null)
+        {
+            Items.Add(slotId, item);
             return true;
         }
-        else if (_checker.CheckCompatibility(slot.TypeId, item.TypeId))
+
+        return false;
+    }
+
+    public bool AddAmount(string slotId, T item)
+    {
+        if (!CheckCompatibility(slotId, item)) return false;
+
+        Items.TryGetValue(slotId, out var existingitem);
+        if (existingitem == null) return false;
+
+        if (existingitem.GetType() != item.GetType()) return false;
+
+        bool isFullStack = item.StackSize <= 1 || item.Amount >= item.StackSize;
+        if (isFullStack) return false;
+
+        int acceptedAmount = Mathf.Min(existingitem.StackSize - existingitem.Amount, item.Amount);
+        existingitem.Amount += acceptedAmount;
+        item.Amount -= acceptedAmount;
+        return true;
+    }
+
+    public bool CreateTypeslot(Type type, string slotId)
+    {
+        TypeSlots.TryGetValue(slotId, out var existingSlotType);
+        if(existingSlotType == null)
         {
-            slot.Content = item;
+            TypeSlots.Add(slotId, type);
             return true;
+        } else if(existingSlotType == type)
+        {
+            return true;
+        } else
+        {
+            Debug.Log($"Slot with id {slotId} alsready exist and contain typt {existingSlotType} ({type} was requested)");
+            return false;
         }
-        else return false;
     }
 
-    public InventoryItem GetItem(string slotId) => GetItem(DEFAULT_PAGE_ID, slotId);
-    public InventoryItem GetItem(string pageId, string slotId)
+    public void DeleteTypeslot(string slotId)
     {
-        var slot = GetSlot(pageId, slotId);
-        if (slot == null) return null;
-        return slot.Content;
-    }
-    public void RemoveItem(string slotId) => RemoveItem(DEFAULT_PAGE_ID, slotId);
-    public void RemoveItem( string pageId, string slotId)
-    {
-        var slot = GetSlot(pageId, slotId);
-        if (slot == null) return;
-        slot.Content = null;
+        TypeSlots.Remove(slotId);
     }
 
-
-    InventorySlot GetSlot(string pageId, string slotId)
+    public T Extract(string slotId)
     {
-        if (pageId == null || pageId.Length == 0) pageId = DEFAULT_PAGE_ID;
-        _data.InventoryPages.TryGetValue(pageId, out var page);
-        if (page == null)
+        Items.TryGetValue(slotId, out var existingitem);
+        Items.Remove(slotId);
+        return existingitem;
+    }
+
+    public T Get(string slotId)
+    {
+        Items.TryGetValue(slotId, out var existingitem);
+        return existingitem;
+    }
+
+    public void Init() { }
+
+    public void DebugPrint()
+    {
+        foreach (var key in Items.Keys)
         {
-            Debug.Log($"Inventory page with id {pageId} not found");
-            return null;
+            Debug.Log(key);
         }
-
-        page.TryGetValue(slotId, out var slot);
-        if (slot == null)
-        {
-            Debug.Log($"Slot with page id {pageId} and slot id {slotId} not found");
-            return null;
-        }
-
-        return slot;
     }
 
-    public class InventoryData
+    public T ExtractAmount(string slotId, int amount)
     {
-        public Dictionary<string, Dictionary<string, InventorySlot>> InventoryPages;
+        throw new NotImplementedException();
     }
 
-    public void DebugLoad()
+    public void Load(InventoryData<T> inventoryData)
     {
-        var pages = new Dictionary<string, Dictionary<string, InventorySlot>>();
-        var page = new Dictionary<string, InventorySlot>();
-        pages[DEFAULT_PAGE_ID] = page;
-
-        _data = new InventoryData
-        {
-            InventoryPages = pages
-        };
-
-        InventoryItem item1 = new InventoryItem
-        {
-            Id = "BaseSpell1",
-            TypeId = InventoryItemType.Spell.ToString()
-        };
-        InventoryItem item2 = new InventoryItem
-        {
-            Id = "BaseSpell2",
-            TypeId = InventoryItemType.Spell.ToString()
-        };
-
-        for (int i = 0; i < 10; i++)
-        {
-            CreateSlot("MainInventory_" + i);
-        }
-
-
-        PutItem("MainInventory_1", item1);
-        PutItem("MainInventory_2", item2);
-
-    }
-
-    public class WandData
-    {
-        public string Name = "_";
-        public string IconId = "DefaultWandIcon";
-        public bool Shuffle = false;
-        public int SpelsCast = 1;
-        public float CastDelay = 0.3f;
-        public float RechargeTime = 0.5f;
-        public int MaxMana = 100;
-        public int ManaCharge = 25;
-        public int Capasity = 5;
-        public float Spread = 0f;
-        public List<SpellData> Spells = Enumerable.Repeat<SpellData>(null, 5).ToList();
-    }
-
-    public class SpellData
-    {
-        public string SpellId;
-        public int ChargesCount = -1;
-
-        public SpellData(string spellId)
-        {
-            SpellId = spellId;
-        }
+        data = inventoryData;
     }
 }

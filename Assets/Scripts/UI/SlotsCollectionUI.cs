@@ -9,7 +9,7 @@ public class SlotsCollectionUI : MonoBehaviour
     public int Capacity = 3;
     public readonly List<SlotUI> Slots = new List<SlotUI>();
 
-    public void Init(string slotIdPrefix, Action<string, InventoryItem> onSlotStatusChanged)
+    public void Init(string slotIdPrefix)
     {
         for (int i = 0; i < Capacity; i++)
         {

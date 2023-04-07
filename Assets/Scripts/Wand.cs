@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wand : MonoBehaviour
+public class Wand : AItemObject
 {
 
     [SerializeField] Projectile projectailPrefab;
     [SerializeField] Transform firePoint;
 
     [SerializeField] SpellsPool spells;
+
+
+
     [SerializeField] float castDelay = 0.1f;
     [SerializeField] float rechargeTime = 0.5f;
     [SerializeField] int spellsPerShoot = 1;
     bool _readyToShoot = true;
+
+    public override void Init(InventoryItem item)
+    {
+    }
 
     public void Shoot()
     {

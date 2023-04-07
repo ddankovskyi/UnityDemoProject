@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InventoryItemType
+public interface IDamageble
 {
-    Spell,
-    Wand
+    void ReceiveDamage(Damage damage);
 }

@@ -10,6 +10,7 @@ public class SlotUI : MonoBehaviour, IDropHandler
 
     [HideInInspector] public ItemUI ContainedItem;
 
+    IInventory<InventoryItem> _inventory = Game.Get<IInventory<InventoryItem>>();
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -17,7 +18,25 @@ public class SlotUI : MonoBehaviour, IDropHandler
         if (item != null)
             AcceptItem(item);
         else
-            Debug.Log("Dropped object is not ItemUI");
+            Debug.LogWarning("Dropped object is not ItemUI");
+    }
+
+    public void Init(ItemUI itemUI, bool checkContent = true)
+    {
+        if (checkContent)
+        {
+            if (_inventory.Get(slotId) != itemUI.Item)
+            {
+                Debug.LogWarning("Provided item doesn't meet expected");
+                return;
+            }
+        }
+
+        itemUI.AssigntToSlot(this);
+        ContainedItem = itemUI;
+        AcceptItemVisually(itemUI);
+        return;
+
     }
 
     public bool AcceptItem(ItemUI itemUI)
@@ -27,55 +46,66 @@ public class SlotUI : MonoBehaviour, IDropHandler
             AcceptItemVisually(itemUI);
             return true;
         }
-        if (ContainedItem != null)
+
+        bool isCompatible = _inventory.CheckCompatibility(slotId, itemUI.Item);
+        if (!isCompatible) return false;
+
+        if (_inventory.Place(slotId, itemUI.Item))
         {
-            return SwapItems(itemUI);
+            itemUI.AssigntToSlot(this);
+            ContainedItem = itemUI;
+            AcceptItemVisually(itemUI);
+            return true;
         }
 
-        bool isAcceptable = Game.Get<InventoryManager>().PutItem(inventoryPageId, slotId, itemUI.Item);
+        if(_inventory.AddAmount(slotId, itemUI.Item))
+        {
+            if(itemUI.Item.Amount <= 0)
+            {
+                Destroy(itemUI.gameObject);
+            }
+            return true;
+        }
 
-        if (!isAcceptable) return false;
+        
 
+        bool canBeSwapped = _inventory.CheckCompatibility(itemUI.CurrentSlot.slotId, ContainedItem.Item);
+        if (!canBeSwapped) return false;
+
+        var extractedItem = _inventory.Extract(slotId);
+        if(extractedItem != ContainedItem.Item)
+        {
+            Debug.LogWarning("Storage system and UI are desynchronized");
+            return false;
+        }
+
+        var containedItem = ContainedItem;
+        var itemsLastSlot = itemUI.CurrentSlot;
+
+        _inventory.Place(slotId, itemUI.Item);
+        itemUI.AssigntToSlot(this);
+        ContainedItem = itemUI;
         AcceptItemVisually(itemUI);
+
+        itemsLastSlot.AcceptItem(containedItem);
         return true;
+        
     }
 
     void AcceptItemVisually(ItemUI itemUI)
     {
-        ContainedItem = itemUI;
-        ContainedItem.AssigntToSlot(this);
-
         var spellTransform = itemUI.transform;
         spellTransform.SetParent(transform);
         spellTransform.localPosition = Vector2.zero;
     }
 
-    bool SwapItems(ItemUI itemUI)
+    public void ReleaseSlot(ItemUI item)
     {
-        SlotUI otherSlot = itemUI.CurrentSlot;
-        bool isAcceptable = Game.Get<InventoryManager>().SwapItems(inventoryPageId, slotId, otherSlot.inventoryPageId, otherSlot.slotId);
-        if (!isAcceptable) return false;
-
-        otherSlot.AcceptItemVisually(ContainedItem);
-        AcceptItemVisually(itemUI);
-        return true;
+        if(ContainedItem == item)
+        {
+            ContainedItem = null;
+            _inventory.Extract(slotId);
+        }
     }
 
-    public void ReleaseSlot()
-    {
-        Game.Get<InventoryManager>().RemoveItem(inventoryPageId, slotId);
-        ContainedItem = null;
-    }
-
-
-    //public event Action<string, InventoryItem> OnSlotStatusChanghed;
-
-    //private void OnDestroy()
-    //{
-    //    foreach (Delegate handler in OnSlotStatusChanghed.GetInvocationList())
-    //    {
-    //        OnSlotStatusChanghed -= (Action<string, InventoryItem>)handler;
-    //    }
-
-    //}
 }

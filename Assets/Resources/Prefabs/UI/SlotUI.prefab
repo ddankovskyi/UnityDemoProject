@@ -111,4 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotId: 0
-  ConteintedItem: {fileID: 0}
+  inventoryPageId: 
+  ContainedItem: {fileID: 0}

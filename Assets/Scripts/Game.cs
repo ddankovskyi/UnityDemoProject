@@ -20,8 +20,9 @@ public class Game
     public static bool Inint(IGlobalManager manager)
     {
         var managaerType = manager.GetType();
-        if (_globalManagers.Any(m => manager.GetType() == managaerType))
+        if (_globalManagers.Any(m => m.GetType() == managaerType))
         {
+            Debug.Log($"Manager with type {manager.GetType()} already registred");
             return false;
         }
 

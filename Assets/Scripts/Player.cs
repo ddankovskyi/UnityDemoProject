@@ -2,40 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : IGlobalManager 
 {
-    [SerializeField] Wand wand;
+    PlayerData _data;
 
+    public int InventorySize => _data.InventorySize;
 
-    Camera _camera;
-    void Start()
+    public void Init()
     {
-        _camera = Camera.main;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        RotateToCrosshair();
-        HandleShots();
-    }
-
-    void RotateToCrosshair()
-    {
-        var mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);  // TODO Change to new Input system
-        mousePos.z = 0f;
-        var dir = (mousePos - wand.transform.position).normalized;
-        dir.z = 0;
-        wand.transform.up = dir;
-    }
-
-    void HandleShots()
-    {
-        if (Input.GetKey(KeyCode.Mouse0)) // TODO Change to new Input system
-        {
-            wand.Shoot();
-
-        }
+        _data = new PlayerData();// TODO load _data from storage;
     }
 }

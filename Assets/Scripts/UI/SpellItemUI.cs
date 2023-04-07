@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class SpellItemUI : ItemUI
 {
-    public void Init(string spellId)
+    public override void Init(InventoryItem item)
     {
-        //Item = spellData;
-        Debug.Log($"Create spell with id {spellId}");
-        //GetComponent<Image>().sprite = 
+        base.Init(item);
+        Debug.Log($"Create spell with id {item.Id}");
+        GetComponent<Image>().color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+
     }
 }
