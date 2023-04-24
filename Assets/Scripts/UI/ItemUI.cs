@@ -47,12 +47,8 @@ public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
         _canvasGroup.blocksRaycasts = true;
         if (_isBeingTransferred)
         {
-            CurrentSlot.AcceptItem(this);
+            CurrentSlot.ReceiveItem(this);
         }
     }
 
-    private void OnDestroy()
-    {
-        CurrentSlot?.ReleaseSlot(this);
-    }
 }

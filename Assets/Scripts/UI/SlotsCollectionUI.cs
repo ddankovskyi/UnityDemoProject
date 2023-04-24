@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class SlotsCollectionUI : MonoBehaviour
 {
-    [SerializeField] SlotUI _slotPrefab;
+    [SerializeField] InventorySlotUI _slotPrefab;
     public int Capacity = 3;
-    public readonly List<SlotUI> Slots = new List<SlotUI>();
+    public readonly List<InventorySlotUI> Slots = new List<InventorySlotUI>();
 
     public void Init(string slotIdPrefix)
     {
@@ -19,6 +19,6 @@ public class SlotsCollectionUI : MonoBehaviour
         }
     }
 
-    public void PutInSlot(ItemUI Item, int slotId) => Slots[slotId].AcceptItem(Item);
+    public void PutInSlot(ItemUI Item, int slotId) => Slots[slotId].ReceiveItem(Item);
     
 }

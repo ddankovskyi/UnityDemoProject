@@ -11,7 +11,8 @@ public class Character : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-
+        WandItem vandItem = Game.Get<InventoryManager<InventoryItem>>().Get(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
+        wand.Init(vandItem);
     }
 
     // Update is called once per frame

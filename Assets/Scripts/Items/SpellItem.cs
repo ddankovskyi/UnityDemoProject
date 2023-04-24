@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace Assets.Scripts.Items
+
+public class SpellItem : InventoryItem
 {
-    internal class SpellItem : InventoryItem
-    {
-        [JsonProperty]
-        public int ChargesLeft;
-        [JsonProperty]
-        public int MaxCharges;
-
-
-    }
+    [JsonProperty]
+    public int ChargesLeft;
+    [JsonProperty]
+    public int MaxCharges;
 }
+
