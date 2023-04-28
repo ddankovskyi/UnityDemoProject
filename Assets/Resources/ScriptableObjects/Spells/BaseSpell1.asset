@@ -15,10 +15,10 @@ MonoBehaviour:
   Id: BaseSpell1
   Icon: {fileID: 21300000, guid: 1abb45e4ac7ddfd44903be16abe70f01, type: 3}
   Prefab: {fileID: 1999715462897784004, guid: 945ddbc80c77edf4a8b904081ef7e6a5, type: 3}
-  ManaCost: 0
+  ManaCost: 10
   CastDelay: 0
   RechargeTime: 0
-  Spread: 0
-  Speed: 0
-  Lifetime: 0
+  Spread: 11
+  Speed: 12
+  Lifetime: 3
   CriticalChance: 0

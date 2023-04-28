@@ -8,8 +8,7 @@ public class CharacterInventoryUI : MonoBehaviour
     [SerializeField] Transform _parentForDragging;
     [SerializeField] SlotsCollectionUI _storedSpells;
     [SerializeField] List<InventorySlotUI> _wandSlots;
-    [SerializeField] ItemsRegistry _itemsRegistry;
-
+    [SerializeField] UniversalItemUI _universalItemUIPrefab;
 
     void Start()
     {
@@ -37,8 +36,7 @@ public class CharacterInventoryUI : MonoBehaviour
             var item = inventory.Get(slot.slotId);
             if (item != null)
             {
-                //TODO remake without registry
-                ItemUI itemUI = Instantiate(_itemsRegistry.GetPrefabUI(item.Id), transform);
+                ItemUI itemUI = Instantiate(_universalItemUIPrefab, transform);
                 itemUI.Init(item);
                 itemUI.ParentForDragging = _parentForDragging;
                 slot.Init(itemUI);

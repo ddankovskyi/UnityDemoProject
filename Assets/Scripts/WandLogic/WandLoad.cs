@@ -12,7 +12,7 @@ using UnityEngine;
 public class WandLoad
 {
     public List<ModifierSpell> Modifyers = new List<ModifierSpell>();
-    public List<SpawnableSpell> Spells = new List<SpawnableSpell>();
+    public List<ProjectileSpell> Spells = new List<ProjectileSpell>();
 
     public float Spread;
 
@@ -22,5 +22,49 @@ public class WandLoad
     public float CastDeley;
     public float RechargeTime;
 
+    public void Release(Vector3 position, Quaternion rotation)
+    {
+        if (Spells.Count == 0)
+        {
+            Debug.Log("Empty load");
+            return;
+        }
 
+        ProjectileSpellGO previousProjectile = null; // required for arcs
+        float formationAngleStep = 0;
+        float nextSpellAngle = 0;
+        if (IsUsingFormation)
+        {
+            formationAngleStep = FormationAngle / Spells.Count;
+            nextSpellAngle = -FormationAngle / 2;
+        }
+
+
+        foreach (ProjectileSpell spell in Spells)
+        {
+            var prefab = Game.Get<SpellsManager>().GetSpellById(spell.Id).Prefab;
+            var spellProjectile = Object.Instantiate(prefab, position, rotation);
+            spellProjectile.InitSpell(spell);
+            Transform projectileTransform = spellProjectile.transform;
+            if (IsUsingFormation)
+            {
+                projectileTransform.Rotate(new Vector3(0, 0, nextSpellAngle));
+                nextSpellAngle += formationAngleStep;
+            }
+            else
+            {
+                var randomAngle = Random.Range(-Spread, Spread);
+                projectileTransform.Rotate(new Vector3(0, 0, randomAngle));
+            }
+
+            foreach (var modifier in Modifyers)
+            {
+                modifier.Apply(spellProjectile, previousProjectile);
+            }
+
+            previousProjectile = spellProjectile;
+        }
+    }
 }
+
+

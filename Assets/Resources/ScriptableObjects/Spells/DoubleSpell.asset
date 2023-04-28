@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f474cb4dd23332e4bbbaaf4ee6aaea17, type: 3}
-  m_Name: BaseSpell2
+  m_Script: {fileID: 11500000, guid: 806816ecba9bfc94fa5ffaa58dae1999, type: 3}
+  m_Name: DoubleSpell
   m_EditorClassIdentifier: 
-  Id: BaseSpell2
-  Icon: {fileID: 21300000, guid: 455c9541abc3354418465ba6af9d7afc, type: 3}
-  Prefab: {fileID: 1999715462897784004, guid: 49280745169f6d64d8285b2fd3a82c62, type: 3}
+  Id: Double
+  Icon: {fileID: 21300000, guid: 0d5d4d821d0d09448979ee21578a10f7, type: 3}
+  Prefab: {fileID: 0}
   ManaCost: 0
   CastDelay: 0
   RechargeTime: 0
   Spread: 0
-  Speed: 12
-  Lifetime: 3
-  CriticalChance: 0
+  SpellsQuantity: 2
+  IsUsingFormation: 0
+  FormationAngle: 0

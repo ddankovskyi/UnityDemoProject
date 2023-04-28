@@ -13,7 +13,7 @@ public class Wand : AItemObject
 
     WandItem _state;
     float _currentMana;
-
+    public float CurrentMana => _currentMana;
 
     AWandSpellsIterator _spellsIterator;
     private void Update()
@@ -28,6 +28,7 @@ public class Wand : AItemObject
         if (item is WandItem wandItem)
         {
             _state = wandItem;
+            _currentMana = _state.Manapool;
             if (!_state.Shuffle)
             {
                 _spellsIterator = new RegularWandSpellIterator(_state.Spells);
@@ -56,7 +57,7 @@ public class Wand : AItemObject
 
         var load = PrepareLoad(_state.SpellsPerShoot);
 
-        ReleaseLoad(load);
+        load.Release(_firePoint.position, _firePoint.rotation);
         if (_spellsIterator.RechargeRequired)
         {
             _spellsIterator.Recharge();
@@ -66,49 +67,6 @@ public class Wand : AItemObject
         else
         {
             StartCoolDown(_state.CastDelay + load.CastDeley);
-        }
-    }
-
-    void ReleaseLoad(WandLoad load)
-    {
-        if (load.Spells.Count == 0)
-        {
-            Debug.Log("Empty load");
-            return;
-        }
-
-        SpellGameObject previousProjectile = null; // required for arcs
-        float formationAngleStep = 0;
-        float nextSpellAngle = 0;
-        if (load.IsUsingFormation)
-        {
-            formationAngleStep = load.FormationAngle / load.Spells.Count;
-            nextSpellAngle = -load.FormationAngle / 2;
-        }
-
-
-        foreach (SpawnableSpell spell in load.Spells)
-        {
-            var prefab = Game.Get<SpellsManager>().GetSpellById(spell.Id).Prefab;
-            Transform projectileTransform = _firePoint;
-            if (load.IsUsingFormation)
-            {
-                projectileTransform.Rotate(new Vector3(0, 0, nextSpellAngle));
-                nextSpellAngle += formationAngleStep;
-            }
-            else
-            {
-                var randomAngle = Random.Range(-load.Spread, load.Spread);
-                projectileTransform.Rotate(new Vector3(0, 0, randomAngle));
-            }
-
-            var spellProjectile = Instantiate(prefab, projectileTransform.position, projectileTransform.rotation);
-            foreach (var modifier in load.Modifyers)
-            {
-                modifier.Apply(spellProjectile, previousProjectile);
-            }
-
-            previousProjectile = spellProjectile;
         }
     }
 
@@ -147,7 +105,7 @@ public class Wand : AItemObject
             {
                 load.Modifyers.Add(modifier);
             }
-            else if (spell is SpawnableSpell projectile)
+            else if (spell is ProjectileSpell projectile)
             {
                 load.Spells.Add(projectile);
                 if (projectile is IWithTrigger withTrigger)
@@ -161,7 +119,6 @@ public class Wand : AItemObject
 
         return load;
     }
-
 
     void StartCoolDown(float delaySec)
     {
@@ -179,14 +136,12 @@ public class Wand : AItemObject
         }
     }
 
-
-
     void RegenMana()
     {
         if (_currentMana < _state.Manapool)
         {
             _currentMana += _state.ManaChargeSpeed * Time.deltaTime;
-            _currentMana = Mathf.Max(_currentMana, _state.Manapool);
+            _currentMana = Mathf.Min(_currentMana, _state.Manapool);
         }
     }
 

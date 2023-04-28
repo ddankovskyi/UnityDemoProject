@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SpawnableSpell", menuName = "ScriptableObjects/Spells/SpawnableSpell")]
+[CreateAssetMenu(fileName = "ProjectileSpell", menuName = "ScriptableObjects/Spells/ProjectileSpell")]
 
-public class SpawnableSpell : Spell
+public class ProjectileSpell : Spell
 {
 
     public float Speed;
