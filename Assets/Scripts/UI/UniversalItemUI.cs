@@ -18,6 +18,7 @@ public class UniversalItemUI : ItemUI
 
     void InitSpellItem(string id)
     {
+        Debug.Log(id);
         _icon.sprite = Game.Get<SpellsManager>().GetSpellById(id).Icon;
         // set _background to spell bg
     }

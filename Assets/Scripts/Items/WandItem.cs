@@ -9,6 +9,7 @@ public class WandItem : InventoryItem
     [JsonProperty] public int SpellsPerShoot = 1;
     [JsonProperty] public float Manapool;
     [JsonProperty] public float ManaChargeSpeed;
-    [JsonProperty] public int Capasity;
     [JsonProperty] public List<SpellItem> Spells;
+    public int Capasity => Spells.Count;
+
 }

@@ -21,7 +21,10 @@ public class Wand : AItemObject
         RegenMana();
     }
 
-    public bool WandSpellsChanged { get; set; }
+    public void ResetState()
+    {
+        _spellsIterator.Recharge();
+    }
 
     public override void Init(InventoryItem item)
     {
@@ -44,10 +47,6 @@ public class Wand : AItemObject
         }
     }
 
-    public void UpdateSpellAtPossition(int slotId, SpellItem spell)
-    {
-        _state.Spells[slotId] = spell;
-    }
 
 
     public void Shoot()

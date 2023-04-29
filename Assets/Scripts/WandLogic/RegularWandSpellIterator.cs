@@ -16,8 +16,11 @@ public class RegularWandSpellIterator : AWandSpellsIterator
         SpellItem nextSpellItem = null;
         while (nextSpellItem == null)
         {
-            if (_spellsQuePointer > _spellItems.Count)
+            if (_spellsQuePointer >= _spellItems.Count)
+            {
+                _rechargeRequired = true;
                 return null;
+            }
             nextSpellItem = _spellItems[_spellsQuePointer++];
         }
         var res = Game.Get<SpellsManager>().GetSpellById(nextSpellItem.Id);
@@ -35,6 +38,7 @@ public class RegularWandSpellIterator : AWandSpellsIterator
                 _spellsQuePointer = checkPointer;
                 return true;
             }
+            checkPointer++;
         }
         return false;
     }

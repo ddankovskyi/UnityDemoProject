@@ -372,10 +372,10 @@ GameObject:
   - component: {fileID: 4739577978159936292}
   - component: {fileID: 3486828636222049724}
   - component: {fileID: 6733395206726266458}
-  - component: {fileID: 8737657292085989947}
   - component: {fileID: 250962258735243595}
+  - component: {fileID: 5088301183679620706}
   m_Layer: 5
-  m_Name: WandContainer
+  m_Name: WandUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -443,20 +443,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8737657292085989947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8755151934096184869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9e76dc00d6ab0d46b20fa81395ed959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _itemType: 1
-  _parentForDragging: {fileID: 0}
 --- !u!225 &250962258735243595
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -469,6 +455,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &5088301183679620706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8755151934096184869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86370aa6a75b2964dbc59af27163ef6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ParentForDragging: {fileID: 0}
+  _spellSlotsParent: {fileID: 9055261653221496646}
+  _wandSpellSlotPrefab: {fileID: 2239850832043500827, guid: 7ad4b8a8d260fca4b8b0c35d98a18596, type: 3}
+  _itemPrefab: {fileID: 7848709407331174686, guid: 86e7ba2f8e6395146906316a360a24b5, type: 3}
 --- !u!1 &9055261653221496647
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,4 +603,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slotPrefab: {fileID: 98533633193711645, guid: 25163411f1b1002488199430eabd001a, type: 3}
-  SlotsCount: 7
+  Capacity: 3

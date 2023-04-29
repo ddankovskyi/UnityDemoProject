@@ -21,6 +21,7 @@ public class SlotUI : MonoBehaviour, IDropHandler
 
     public virtual void Init(ItemUI itemUI)
     {
+
         AcceptItem(itemUI);
         return;
     }
@@ -38,7 +39,7 @@ public class SlotUI : MonoBehaviour, IDropHandler
             return true;
         }
 
-        if(ContainedItem = null)
+        if(ContainedItem == null)
         {           
             AcceptItem(itemUI);
             return true;

@@ -10,14 +10,15 @@ public class InventorySlotUI : SlotUI
 
 
     IInventory<InventoryItem> _inventory = Game.Get<IInventory<InventoryItem>>();
-
     public void Init(ItemUI itemUI, bool checkContent = true)
     {
+        if(_inventory == null) _inventory = Game.Get<IInventory<InventoryItem>>(); // TODO better solution? 
         if (checkContent)
         {
-            if (_inventory.Get(slotId) != itemUI.Item)
+            InventoryItem expected = _inventory.Get(slotId);
+            if (expected != itemUI.Item)
             {
-                Debug.LogWarning("Provided item doesn't meet expected");
+                Debug.LogWarning($"Slot {slotId}: Provided item doesn't meet expected");
                 return;
             }
         }

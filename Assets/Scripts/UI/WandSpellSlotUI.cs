@@ -1,17 +1,33 @@
-﻿public class WandSpellSlotUI : SlotUI
+﻿using System;
+
+public class WandSpellSlotUI : SlotUI
 {
     Wand _wand;
     int _slotId;
-    public void Init(ItemUI item, Wand wand, int slotId)
-    {
-        base.Init(item);
-        _wand = wand;
-        _slotId = slotId;
-    }
 
+    public Action<int, SpellItem> OnItemChanged; 
+
+    public void Init(int slitId)
+    {
+        _slotId = slitId;
+    }
+    public override bool ReceiveItem(ItemUI itemUI)
+    {
+        if (itemUI.Item is SpellItem)
+        {
+            return base.ReceiveItem(itemUI);
+        } else return false;
+    }
     protected override void AcceptItem(ItemUI itemUI)
     {
         base.AcceptItem(itemUI);
-        // notify wand
+        OnItemChanged?.Invoke(_slotId, ContainedItem.Item as SpellItem);
+    }
+
+    protected override void ReleaseSlot()
+    {
+        base.ReleaseSlot();
+        OnItemChanged?.Invoke(_slotId, null);
+
     }
 }

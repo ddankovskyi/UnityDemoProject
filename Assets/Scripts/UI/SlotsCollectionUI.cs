@@ -9,7 +9,7 @@ public class SlotsCollectionUI : MonoBehaviour
     public int Capacity = 3;
     public readonly List<InventorySlotUI> Slots = new List<InventorySlotUI>();
 
-    public void Init(string slotIdPrefix)
+    public void Init(string slotIdPrefix) // TODO remake with id list, it shouldn't be responsible for id generation. Also maybe add helper to generate id list by prefix
     {
         for (int i = 0; i < Capacity; i++)
         {

@@ -51,12 +51,11 @@ public class MainSceneStarter : MonoBehaviour
 
         WandItem wand = new WandItem
         {
-            Capasity = 3,
             Manapool = 100,
             ManaChargeSpeed = 15,
             CastDelay = 0.3f,
             RechargeTime = 0.5f,
-            Spells = new List<SpellItem> {  BaseSpell1, WithTrigger, BaseSpell2 }
+            Spells = new List<SpellItem> {  null, BaseSpell1, WithTrigger, null, BaseSpell2, null}
         };
 
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
