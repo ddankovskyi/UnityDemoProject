@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem 
 {
-    InventoryData<T> data;
-    Dictionary<string, T> Items => data.Items;
-    Dictionary<string, System.Type> TypeSlots => data.TypeSlots;
+    InventoryData<T> _data;
+    Dictionary<string, T> Items => _data.Items;
+    Dictionary<string, System.Type> TypeSlots => _data.TypeSlots;
 
     public bool CheckCompatibility(string slotId, T item)
     {
@@ -105,6 +105,6 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
 
     public void Load(InventoryData<T> inventoryData)
     {
-        data = inventoryData;
+        _data = inventoryData;
     }
 }

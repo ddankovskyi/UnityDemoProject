@@ -1,4 +1,4 @@
-using Assets.Scripts.Items;
+
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -15,38 +15,56 @@ public class MainSceneStarter : MonoBehaviour
 
         var inventoryData = CreateDebugInventoryData();
         var inventory = new InventoryManager<InventoryItem>();
+        var spellsManager = new SpellsManager();
         inventory.Load(inventoryData);
 
         Game.Inint(inventory);
-
         Game.Inint(player);
-
-
-        
-
+        Game.Inint(spellsManager);
         
     }
 
     InventoryData<InventoryItem> CreateDebugInventoryData()
     {
 
-     
-        InventoryItem item1 = new SpellItem
+
+        SpellItem BaseSpell1 = new SpellItem
         {
             Id = "BaseSpell1",
             Amount = 1
         };
-        InventoryItem item2 = new SpellItem
+        SpellItem WithTrigger = new SpellItem
+        {
+            Id = "Base1WithTrigger",
+            Amount = 1
+        };
+        SpellItem BaseSpell2 = new SpellItem
         {
             Id = "BaseSpell2",
             Amount = 1
+        };
+        SpellItem Double = new SpellItem
+        {
+            Id = "Double",
+            Amount = 1
+        };
+
+        WandItem wand = new WandItem
+        {
+            Manapool = 100,
+            ManaChargeSpeed = 15,
+            CastDelay = 0.3f,
+            RechargeTime = 0.5f,
+            Spells = new List<SpellItem> {  null, BaseSpell1, WithTrigger, null, BaseSpell2, null}
         };
 
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
         inventoryData.Items = new Dictionary<string, InventoryItem>();
         inventoryData.TypeSlots = new Dictionary<string, System.Type>();
-        inventoryData.Items.Add(CharacterInventoryUI.INVENTORY_SLOTS_ID_PREFIX + 1, item1);
-        inventoryData.Items.Add(CharacterInventoryUI.INVENTORY_SLOTS_ID_PREFIX + 2, item2);
+        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 1, BaseSpell1);
+        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 3, BaseSpell2);
+        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 4, Double);
+        inventoryData.Items.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, wand);
         return inventoryData;
     }
 

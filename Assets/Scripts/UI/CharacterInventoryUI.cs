@@ -7,40 +7,45 @@ public class CharacterInventoryUI : MonoBehaviour
 
     [SerializeField] Transform _parentForDragging;
     [SerializeField] SlotsCollectionUI _storedSpells;
-    [SerializeField] List<SlotUI> _wandSlots;
-    [SerializeField] ItemsRegistry _itemsRegistry;
+    [SerializeField] List<InventorySlotUI> _wandSlots;
+    [SerializeField] WandUI _wandUIPrefab;
+    [SerializeField] UniversalItemUI _universalItemUIPrefab;
 
-    // Start is called before the first frame update
-
-    public const string INVENTORY_SLOTS_ID_PREFIX = "MainInventory_"; // TODO you probably don't want to store it here 
+    IInventory<InventoryItem> _inventory;
     void Start()
     {
+        _inventory = Game.Get<IInventory<InventoryItem>>();
         InitStoredSpells();
         InitWands();
     }
     void InitWands()
     {
-        string slotIdPrefix = "WandSlot_";
         var inventory = Game.Get<IInventory<InventoryItem>>();
-        int i = 0;
-        _wandSlots.ForEach(ws =>
+        int i = 1;
+        _wandSlots.ForEach(wandSlot =>
         {
-            ws.slotId = slotIdPrefix + i;
+            wandSlot.slotId = InventoryIds.WANDS_SLOTS_ID_PREFIX + i++;
+            if(inventory.Get(wandSlot.slotId) is WandItem wandItem)
+            {
+                WandUI wandUI = Instantiate(_wandUIPrefab, wandSlot.transform);
+                wandUI.ParentForDragging = _parentForDragging;
+                wandUI.Init(wandItem);
+                wandSlot.Init(wandUI);
+            }
         });
     }
 
 
     void InitStoredSpells()
     {
-        var inventory = Game.Get<IInventory<InventoryItem>>();
         _storedSpells.Capacity = Game.Get<Player>().InventorySize;
-        _storedSpells.Init(INVENTORY_SLOTS_ID_PREFIX);
+        _storedSpells.Init(InventoryIds.INVENTORY_SLOTS_ID_PREFIX);
         _storedSpells.Slots.ForEach(slot =>
         {
-            var item = inventory.Get(slot.slotId);
+            var item = _inventory.Get(slot.slotId);
             if (item != null)
             {
-                ItemUI itemUI = Instantiate(_itemsRegistry.GetPrefabUI(item.Id), transform);
+                ItemUI itemUI = Instantiate(_universalItemUIPrefab, transform);
                 itemUI.Init(item);
                 itemUI.ParentForDragging = _parentForDragging;
                 slot.Init(itemUI);

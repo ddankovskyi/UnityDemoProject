@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Transform ParentForDragging;
-    public InventoryItem Item { get; private set; }
+    public virtual InventoryItem Item { get; private set; }
     public SlotUI CurrentSlot { get; set; }
 
     Camera _camera;
@@ -32,6 +32,7 @@ public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
     {
         _isBeingTransferred = true;
         _canvasGroup.blocksRaycasts = false;
+        Debug.Log(ParentForDragging?.name);
         transform.SetParent(ParentForDragging);
     }
 
@@ -47,12 +48,8 @@ public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
         _canvasGroup.blocksRaycasts = true;
         if (_isBeingTransferred)
         {
-            CurrentSlot.AcceptItem(this);
+            CurrentSlot.ReceiveItem(this);
         }
     }
 
-    private void OnDestroy()
-    {
-        CurrentSlot?.ReleaseSlot(this);
-    }
 }

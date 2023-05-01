@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f474cb4dd23332e4bbbaaf4ee6aaea17, type: 3}
+  m_Name: BaseSpell2
+  m_EditorClassIdentifier: 
+  Id: BaseSpell2
+  Icon: {fileID: 21300000, guid: 455c9541abc3354418465ba6af9d7afc, type: 3}
+  Prefab: {fileID: 1999715462897784004, guid: 49280745169f6d64d8285b2fd3a82c62, type: 3}
+  ManaCost: 0
+  CastDelay: 0
+  RechargeTime: 0
+  Spread: 0
+  Speed: 12
+  Lifetime: 3
+  CriticalChance: 0

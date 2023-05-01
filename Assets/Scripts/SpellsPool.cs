@@ -6,10 +6,10 @@ using UnityEngine;
 [Serializable]
 public class SpellsPool 
 {
-    [SerializeField] List<Spell> spells;
+    [SerializeField] List<ProjectileSpellGO> spells;
     int pointer;
 
-    public Spell NextSpell(ref bool shouldRecharge)
+    public ProjectileSpellGO NextSpell(ref bool shouldRecharge)
     {
         shouldRecharge = false;
         if (spells.Count == 0) return null;

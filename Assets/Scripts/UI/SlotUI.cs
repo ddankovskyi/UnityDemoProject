@@ -1,99 +1,69 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
 public class SlotUI : MonoBehaviour, IDropHandler
 {
-    [HideInInspector] public string slotId;
-    [HideInInspector] public string inventoryPageId;
-
     [HideInInspector] public ItemUI ContainedItem;
-
-    IInventory<InventoryItem> _inventory = Game.Get<IInventory<InventoryItem>>();
 
     public void OnDrop(PointerEventData eventData)
     {
         ItemUI item = eventData.pointerDrag.GetComponent<ItemUI>();
         if (item != null)
-            AcceptItem(item);
+            ReceiveItem(item);
         else
             Debug.LogWarning("Dropped object is not ItemUI");
     }
 
-    public void Init(ItemUI itemUI, bool checkContent = true)
+    public virtual void Init(ItemUI itemUI)
     {
-        if (checkContent)
-        {
-            if (_inventory.Get(slotId) != itemUI.Item)
-            {
-                Debug.LogWarning("Provided item doesn't meet expected");
-                return;
-            }
-        }
 
-        itemUI.AssigntToSlot(this);
-        ContainedItem = itemUI;
-        AcceptItemVisually(itemUI);
+        AcceptItem(itemUI);
         return;
-
     }
 
-    public bool AcceptItem(ItemUI itemUI)
+    public virtual bool CheckIfCanAcceptBySwaping(ItemUI itemUI)
     {
-        if(itemUI == ContainedItem)
+        return true;
+    }
+
+    public virtual bool ReceiveItem(ItemUI itemUI)
+    {
+        if (itemUI == ContainedItem)
         {
-            AcceptItemVisually(itemUI);
+            AcceptItem(itemUI);
             return true;
         }
 
-        bool isCompatible = _inventory.CheckCompatibility(slotId, itemUI.Item);
-        if (!isCompatible) return false;
-
-        if (_inventory.Place(slotId, itemUI.Item))
-        {
-            itemUI.AssigntToSlot(this);
-            ContainedItem = itemUI;
-            AcceptItemVisually(itemUI);
+        if(ContainedItem == null)
+        {           
+            AcceptItem(itemUI);
             return true;
         }
 
-        if(_inventory.AddAmount(slotId, itemUI.Item))
+        if (itemUI.CurrentSlot.CheckIfCanAcceptBySwaping(ContainedItem))
         {
-            if(itemUI.Item.Amount <= 0)
-            {
-                Destroy(itemUI.gameObject);
-            }
+            var containedItem = ContainedItem;
+            var itemsLastSlot = itemUI.CurrentSlot;
+
+    
+            AcceptItem(itemUI);
+
+            itemsLastSlot.ReceiveItem(containedItem);
             return true;
         }
 
-        
+        return false;
+    }
 
-        bool canBeSwapped = _inventory.CheckCompatibility(itemUI.CurrentSlot.slotId, ContainedItem.Item);
-        if (!canBeSwapped) return false;
-
-        var extractedItem = _inventory.Extract(slotId);
-        if(extractedItem != ContainedItem.Item)
-        {
-            Debug.LogWarning("Storage system and UI are desynchronized");
-            return false;
-        }
-
-        var containedItem = ContainedItem;
-        var itemsLastSlot = itemUI.CurrentSlot;
-
-        _inventory.Place(slotId, itemUI.Item);
+    protected virtual void AcceptItem(ItemUI itemUI)
+    {
         itemUI.AssigntToSlot(this);
         ContainedItem = itemUI;
-        AcceptItemVisually(itemUI);
-
-        itemsLastSlot.AcceptItem(containedItem);
-        return true;
-        
-    }
-
-    void AcceptItemVisually(ItemUI itemUI)
-    {
         var spellTransform = itemUI.transform;
         spellTransform.SetParent(transform);
         spellTransform.localPosition = Vector2.zero;
@@ -101,11 +71,13 @@ public class SlotUI : MonoBehaviour, IDropHandler
 
     public void ReleaseSlot(ItemUI item)
     {
-        if(ContainedItem == item)
-        {
-            ContainedItem = null;
-            _inventory.Extract(slotId);
-        }
+        if (ContainedItem == item)
+            ReleaseSlot();
+    }
+
+    protected virtual void ReleaseSlot() { 
+        ContainedItem = null; 
     }
 
 }
+
