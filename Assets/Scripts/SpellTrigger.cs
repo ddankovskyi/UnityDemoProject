@@ -31,8 +31,8 @@ public class SpellTrigger : MonoBehaviour
 
 
         //Debug.DrawRay(contactPoint, reflection, Color.yellow, 3f);
-        Debug.DrawRay(contactPoint, _lastVelosity.normalized, Color.blue, 3f);
-        Debug.DrawRay(contactPoint, -_lastVelosity.normalized, Color.green, 3f);
+        //Debug.DrawRay(contactPoint, _lastVelosity.normalized, Color.blue, 3f);
+        //Debug.DrawRay(contactPoint, -_lastVelosity.normalized, Color.green, 3f);
 
         var spawnPoint = contactPoint + reflection * TRIGGER_SPAWN_OFFSET;
 

@@ -32,6 +32,9 @@ public class ProjectileSpellGO : AItemObject
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Explode();
+        Debug.Log(collision.gameObject.name);
+        
+        collision.gameObject.GetComponent<IDamageble>()?.ReceiveDamage(new Damage(_spellData.Damage));
     }
 
     public void InitSpell(ProjectileSpell spell)

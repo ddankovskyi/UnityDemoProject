@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Crosshair : MonoBehaviour
 {
+   
+    [SerializeField] bool _hideCoursour;
+
     Camera _camera;
     float _initZPos;
 
@@ -11,7 +14,7 @@ public class Crosshair : MonoBehaviour
     {
         _camera = Camera.main;
         _initZPos = transform.position.z;
-        //Cursor.visible = false;
+        Cursor.visible = !_hideCoursour;
     }
 
     void Update()
