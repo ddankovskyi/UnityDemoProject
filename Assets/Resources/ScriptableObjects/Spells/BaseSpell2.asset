@@ -21,4 +21,5 @@ MonoBehaviour:
   Spread: 0
   Speed: 12
   Lifetime: 3
+  Damage: 5
   CriticalChance: 0
