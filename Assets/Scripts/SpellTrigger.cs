@@ -25,18 +25,16 @@ public class SpellTrigger : MonoBehaviour
     {
         var normal = collision.GetContact(0).normal;
         Vector3 contactPoint = collision.GetContact(0).point;
-        Vector3 InDirection = contactPoint + _lastVelosity.normalized;
+        var reflection = Vector3.Reflect(_lastVelosity, normal).normalized;
+        
 
-        var reflection = Vector3.Reflect(InDirection, normal).normalized;
-
-
+        //Debug.DrawRay(contactPoint, normal, Color.blue, 3f);
         //Debug.DrawRay(contactPoint, reflection, Color.yellow, 3f);
-        //Debug.DrawRay(contactPoint, _lastVelosity.normalized, Color.blue, 3f);
         //Debug.DrawRay(contactPoint, -_lastVelosity.normalized, Color.green, 3f);
 
         var spawnPoint = contactPoint + reflection * TRIGGER_SPAWN_OFFSET;
 
-        Debug.DrawRay(spawnPoint, reflection, Color.cyan, 3f);
+        //Debug.DrawRay(spawnPoint, reflection, Color.cyan, 3f);
 
         Load?.Release(spawnPoint, Quaternion.LookRotation(transform.forward, reflection));
     }
