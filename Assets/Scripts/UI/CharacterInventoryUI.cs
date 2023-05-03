@@ -38,7 +38,7 @@ public class CharacterInventoryUI : MonoBehaviour
 
     void InitStoredSpells()
     {
-        _storedSpells.Capacity = Game.Get<Player>().InventorySize;
+        _storedSpells.Capacity = Game.Get<CharacterManager>().InventorySize;
         _storedSpells.Init(InventoryIds.INVENTORY_SLOTS_ID_PREFIX);
         _storedSpells.Slots.ForEach(slot =>
         {

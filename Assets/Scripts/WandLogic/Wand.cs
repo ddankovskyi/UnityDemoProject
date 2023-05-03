@@ -60,7 +60,6 @@ public class Wand : AItemObject
         if (_spellsIterator.RechargeRequired)
         {
             _spellsIterator.Recharge();
-            print("Recharge");
             StartCoolDown(_state.RechargeTime + load.RechargeTime);
         }
         else
