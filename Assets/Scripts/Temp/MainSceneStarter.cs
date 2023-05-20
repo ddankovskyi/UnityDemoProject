@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.Progress;
@@ -49,13 +50,18 @@ public class MainSceneStarter : MonoBehaviour
             Amount = 1
         };
 
+        List<SpellItem> items = Enumerable.Repeat<SpellItem>(null, 14).ToList();
+        items[1] = BaseSpell1;
+        items[2] = WithTrigger;
+        items[4] = BaseSpell2;
+
         WandItem wand = new WandItem
         {
             Manapool = 100,
             ManaChargeSpeed = 15,
             CastDelay = 0.3f,
             RechargeTime = 0.5f,
-            Spells = new List<SpellItem> {  null, BaseSpell1, WithTrigger, null, BaseSpell2, null}
+            Spells = items
         };
 
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
