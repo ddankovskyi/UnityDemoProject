@@ -18,8 +18,8 @@ public class Character : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        WandItem vandItem = Game.Get<InventoryManager<InventoryItem>>().Get(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
-        _wand.Init(vandItem);
+        WandItem wandItem = Game.Get<InventoryManager<InventoryItem>>().Get(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
+        _wand.Init(wandItem);
         _characterController = GetComponent<CharacterController>();
         InitInputs();
     }
