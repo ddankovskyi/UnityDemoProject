@@ -1,19 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class Wand : AItemObject
+
+public class Wand : MonoBehaviour
 {
 
     [SerializeField] Transform _firePoint;
 
-    bool _readyToShoot = true;
 
-    WandItem _state;
+    WandItem _wandData;
     float _currentMana;
     public float CurrentMana => _currentMana;
+
+    DateTime _readyToShootTime;
+
+    bool IsReadyToShoot => _readyToShootTime < DateTime.Now;
+
 
     AWandSpellsIterator _spellsIterator;
     private void Update()
@@ -26,45 +28,39 @@ public class Wand : AItemObject
         _spellsIterator.Recharge();
     }
 
-    public override void Init(InventoryItem item)
+    public void Init(WandItem wandItem)
     {
-        if (item is WandItem wandItem)
+
+        _wandData = wandItem;
+        _currentMana = _wandData.Manapool;
+        _readyToShootTime = DateTime.Now.AddSeconds(-1);
+        if (!_wandData.Shuffle)
         {
-            _state = wandItem;
-            _currentMana = _state.Manapool;
-            if (!_state.Shuffle)
-            {
-                _spellsIterator = new RegularWandSpellIterator(_state.Spells);
-            }
-            else
-            {
-                throw new System.NotImplementedException();
-            }
+            _spellsIterator = new RegularWandSpellIterator(_wandData.Spells);
         }
         else
         {
-            Debug.LogError("Wand inited with not wand item data");
+            throw new System.NotImplementedException();
         }
+
     }
-
-
 
     public void Shoot()
     {
-        if (!_readyToShoot)
+        if (!IsReadyToShoot)
             return;
 
-        var load = PrepareLoad(_state.SpellsPerShoot);
+        var load = PrepareLoad(_wandData.SpellsPerShoot);
 
         load.Release(_firePoint.position, _firePoint.rotation);
         if (_spellsIterator.RechargeRequired)
         {
             _spellsIterator.Recharge();
-            StartCoolDown(_state.RechargeTime + load.RechargeTime);
+            Recharge(load.RechargeTime, load.CastDeley);
         }
         else
         {
-            StartCoolDown(_state.CastDelay + load.CastDeley);
+            CoolDown(load.CastDeley);
         }
     }
 
@@ -90,13 +86,13 @@ public class Wand : AItemObject
             load.Spread += spell.Spread;
             _currentMana -= spell.ManaCost;
 
-            if (spell is MulticastSpell multucast)
+            if (spell is MulticastSpell multicast)
             {
-                spellsToCast += multucast.SpellsQuantity;
-                if (multucast.IsUsingFormation && !load.IsUsingFormation)
+                spellsToCast += multicast.SpellsQuantity;
+                if (multicast.IsUsingFormation && !load.IsUsingFormation)
                 {
                     load.IsUsingFormation = true;
-                    load.FormationAngle = multucast.FormationAngle;
+                    load.FormationAngle = multicast.FormationAngle;
                 }
             }
             else if (spell is ModifierSpell modifier)
@@ -118,28 +114,24 @@ public class Wand : AItemObject
         return load;
     }
 
-    void StartCoolDown(float delaySec)
+    void Recharge(float loadRechargeTime, float loadCastDelay)
     {
-        if (delaySec > 0)
-        {
-            StartCoroutine(StartCoolDownCoroutine(delaySec));
-        }
-
-
-        IEnumerator StartCoolDownCoroutine(float delaySec)
-        {
-            _readyToShoot = false;
-            yield return new WaitForSeconds(delaySec);
-            _readyToShoot = true;
-        }
+        var delay = Mathf.Max(_wandData.RechargeTime + loadRechargeTime, _wandData.CastDelay + loadCastDelay);
+        _readyToShootTime = DateTime.Now.AddSeconds(delay);
     }
+
+    void CoolDown(float loadCastDelay)
+    {
+        _readyToShootTime = DateTime.Now.AddSeconds(_wandData.CastDelay + loadCastDelay);
+    }
+
 
     void RegenMana()
     {
-        if (_currentMana < _state.Manapool)
+        if (_currentMana < _wandData.Manapool)
         {
-            _currentMana += _state.ManaChargeSpeed * Time.deltaTime;
-            _currentMana = Mathf.Min(_currentMana, _state.Manapool);
+            _currentMana += _wandData.ManaChargeSpeed * Time.deltaTime;
+            _currentMana = Mathf.Min(_currentMana, _wandData.Manapool);
         }
     }
 
