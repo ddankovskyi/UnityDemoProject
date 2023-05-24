@@ -9,12 +9,12 @@ public class ProjectileSpellGO : MonoBehaviour
     ProjectileSpell _spellData;
     [SerializeField] ParticleSystem _explosionPrefab;
 
-    Rigidbody2D _rigidbody;
+    Rigidbody _rigidbody;
     void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody = GetComponent<Rigidbody>();
         Destroy(gameObject, _spellData.Lifetime);
-        _rigidbody.AddRelativeForce(Vector2.up * _spellData.Speed, ForceMode2D.Impulse);
+        _rigidbody.AddRelativeForce(Vector3.forward * _spellData.Speed, ForceMode.Impulse);
 
     }
 
@@ -29,7 +29,7 @@ public class ProjectileSpellGO : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         Explode();
         

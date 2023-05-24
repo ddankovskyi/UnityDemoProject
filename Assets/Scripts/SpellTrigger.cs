@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpellTrigger : MonoBehaviour
 {
     Vector3 _lastVelosity;
-    Rigidbody2D _rigidbody;
+    Rigidbody _rigidbody;
 
     float TRIGGER_SPAWN_OFFSET = 0.5f;
 
@@ -14,7 +14,7 @@ public class SpellTrigger : MonoBehaviour
 
     void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();    
+        _rigidbody = GetComponent<Rigidbody>();    
     }
     private void FixedUpdate()
     {
