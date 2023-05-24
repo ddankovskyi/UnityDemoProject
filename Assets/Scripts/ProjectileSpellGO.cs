@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class ProjectileSpellGO : AItemObject
+public class ProjectileSpellGO : MonoBehaviour
 {
     ProjectileSpell _spellData;
     [SerializeField] ParticleSystem _explosionPrefab;
@@ -32,7 +32,6 @@ public class ProjectileSpellGO : AItemObject
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Explode();
-        Debug.Log(collision.gameObject.name);
         
         collision.gameObject.GetComponent<IDamageble>()?.ReceiveDamage(new Damage(_spellData.Damage));
     }
@@ -46,8 +45,5 @@ public class ProjectileSpellGO : AItemObject
             triggerComponent.Load = spellWithTrigger.Load;
         }
 
-    }
-
-    public override void Init(InventoryItem item) {
     }
 }

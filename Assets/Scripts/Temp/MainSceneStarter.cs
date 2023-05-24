@@ -11,7 +11,7 @@ public class MainSceneStarter : MonoBehaviour
 {
     private void Awake()
     {
-        Player player = new Player();
+        CharacterManager player = new CharacterManager();
 
         var inventoryData = CreateDebugInventoryData();
         var inventory = new InventoryManager<InventoryItem>();
