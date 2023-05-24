@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] Wand wand;
+    [SerializeField] Wand _wand;
 
 
     [SerializeField] private float _movespeed = 1f; // TODO take it form char manager
@@ -20,24 +19,27 @@ public class Character : MonoBehaviour
     {
         _camera = Camera.main;
         WandItem vandItem = Game.Get<InventoryManager<InventoryItem>>().Get(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
-        wand.Init(vandItem);
+        _wand.Init(vandItem);
         _characterController = GetComponent<CharacterController>();
         InitInputs();
+    }
+
+    public void ResetWand()
+    {
+        Debug.Log("Reset wand");
+        _wand?.ResetState();
     }
 
     void InitInputs()
     {
         _inputActions = new PlayerInputActions().Character;
         _inputActions.Enable();
-
     }
-
-
 
     public void HandleShooting()
     {     
         if(_inputActions.Shoot.IsPressed())
-            wand.Shoot();   
+            _wand.Shoot();   
     }
 
     public void MovePlayer()
@@ -77,7 +79,5 @@ public class Character : MonoBehaviour
         //dir.z = 0;
         //wand.transform.up = dir;
     }
-
-
 
 }
