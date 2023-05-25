@@ -32,15 +32,14 @@ public class ItemUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
     {
         _isBeingTransferred = true;
         _canvasGroup.blocksRaycasts = false;
-        Debug.Log(ParentForDragging?.name);
-        transform.SetParent(ParentForDragging);
+        transform.SetParent(ParentForDragging, true);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        var mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);  // TODO Change to new Input system
-        mousePos.z = 0f;
-        transform.position = mousePos;
+        //var mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);  // TODO Change to new Input system
+        ////mousePos.z = 0f;
+        //transform.position = mousePos;
     }
 
     public void OnEndDrag(PointerEventData eventData)

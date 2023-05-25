@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpellTrigger : MonoBehaviour
 {
     Vector3 _lastVelosity;
-    Rigidbody2D _rigidbody;
+    Rigidbody _rigidbody;
 
     float TRIGGER_SPAWN_OFFSET = 0.5f;
 
@@ -14,19 +14,19 @@ public class SpellTrigger : MonoBehaviour
 
     void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();    
+        _rigidbody = GetComponent<Rigidbody>();    
     }
     private void FixedUpdate()
     {
         _lastVelosity = _rigidbody.velocity;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         var normal = collision.GetContact(0).normal;
         Vector3 contactPoint = collision.GetContact(0).point;
         var reflection = Vector3.Reflect(_lastVelosity, normal).normalized;
-        
+
 
         //Debug.DrawRay(contactPoint, normal, Color.blue, 3f);
         //Debug.DrawRay(contactPoint, reflection, Color.yellow, 3f);
@@ -36,6 +36,6 @@ public class SpellTrigger : MonoBehaviour
 
         //Debug.DrawRay(spawnPoint, reflection, Color.cyan, 3f);
 
-        Load?.Release(spawnPoint, Quaternion.LookRotation(transform.forward, reflection));
+        Load?.Release(spawnPoint, Quaternion.LookRotation(reflection, transform.up));
     }
 }

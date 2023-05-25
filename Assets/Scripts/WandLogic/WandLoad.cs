@@ -48,13 +48,13 @@ public class WandLoad
             Transform projectileTransform = spellProjectile.transform;
             if (IsUsingFormation)
             {
-                projectileTransform.Rotate(new Vector3(0, 0, nextSpellAngle));
+                projectileTransform.Rotate(new Vector3(0, nextSpellAngle, 0));
                 nextSpellAngle += formationAngleStep;
             }
             else
             {
                 var randomAngle = Random.Range(-Spread, Spread);
-                projectileTransform.Rotate(new Vector3(0, 0, randomAngle));
+                projectileTransform.Rotate(new Vector3(0, randomAngle, 0));
             }
 
             foreach (var modifier in Modifyers)

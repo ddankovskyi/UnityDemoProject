@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: Base1WithTrigger
   Icon: {fileID: 21300000, guid: b5ff4b417c5008f4d8c309b83cfe445e, type: 3}
-  Prefab: {fileID: 1999715462897784004, guid: 945ddbc80c77edf4a8b904081ef7e6a5, type: 3}
+  Prefab: {fileID: 1999715462897784004, guid: 59882f9d68b6a2c498b4071343466725, type: 3}
   ManaCost: 20
   CastDelay: 0
   RechargeTime: 0

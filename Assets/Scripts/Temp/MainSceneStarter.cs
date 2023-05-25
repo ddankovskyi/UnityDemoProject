@@ -71,6 +71,7 @@ public class MainSceneStarter : MonoBehaviour
         inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 3, BaseSpell2);
         inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 4, Double);
         inventoryData.Items.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, wand);
+        inventoryData.TypeSlots.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, typeof(WandItem));
         return inventoryData;
     }
 
