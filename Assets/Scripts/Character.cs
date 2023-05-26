@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class Character : MonoBehaviour
@@ -30,6 +31,7 @@ public class Character : MonoBehaviour
         _wand?.ResetState();
     }
 
+
     void InitInputs()
     {
         _inputActions = new PlayerInputActions().Character;
@@ -48,7 +50,6 @@ public class Character : MonoBehaviour
         Vector3 input3 = new Vector3(input.x, 0, input.y);
         input3 = Quaternion.AngleAxis(_camera.transform.rotation.eulerAngles.y, Vector3.up) * input3;
         if (input == Vector2.zero) return;
-
         _characterController.Move(input3 * _movespeed * Time.deltaTime);
        
     }

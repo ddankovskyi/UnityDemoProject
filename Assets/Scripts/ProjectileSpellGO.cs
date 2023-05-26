@@ -14,17 +14,19 @@ public class ProjectileSpellGO : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         Destroy(gameObject, _spellData.Lifetime);
-        _rigidbody.AddRelativeForce(Vector3.forward * _spellData.Speed, ForceMode.Impulse);
+        _rigidbody.AddForce(transform.forward * _spellData.Speed, ForceMode.Impulse);
 
     }
 
     void Explode()
     {
+        if (_explosionPrefab)
+        {
+            ParticleSystem particles = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            //particles.GetComponent<ParticleSystemRenderer>().material.SetTexture("_MainTex", _spellData.Icon.texture);
 
-        ParticleSystem particles = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-        //particles.GetComponent<ParticleSystemRenderer>().material.SetTexture("_MainTex", _spellData.Icon.texture);
-
-        Destroy(particles.gameObject, 1); // TODO destroy properly
+            Destroy(particles.gameObject, 1); // TODO destroy properly
+        }
         Destroy(gameObject, 0.01f);
     }
 
@@ -32,7 +34,6 @@ public class ProjectileSpellGO : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Explode();
-        Debug.Log(collision.gameObject.name);
         collision.gameObject.GetComponent<IDamageble>()?.ReceiveDamage(new Damage(_spellData.Damage));
     }
 

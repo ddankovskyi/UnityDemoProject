@@ -53,7 +53,7 @@ public class WandLoad
             }
             else
             {
-                var randomAngle = Random.Range(-Spread, Spread);
+                var randomAngle = Random.Range(-Spread/2, Spread/2);
                 projectileTransform.Rotate(new Vector3(0, randomAngle, 0));
             }
 

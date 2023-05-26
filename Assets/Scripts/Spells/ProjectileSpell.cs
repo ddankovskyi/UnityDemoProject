@@ -10,7 +10,7 @@ public class ProjectileSpell : Spell
     public float Speed;
     public float Lifetime;
 
-    public float Damage;
+    public int Damage;
 
     public float CriticalChance;
     

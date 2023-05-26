@@ -6,11 +6,12 @@ using UnityEngine;
 [Serializable]
 public struct Damage
 {
-    public float DamageValue { get; private set; }
+    public int DamageValue { get; private set; }
 
-    public Damage(float damageValue)
+    public Damage(int damageValue)
     {
         this.DamageValue = damageValue;
     }
     // damage type
+
 }

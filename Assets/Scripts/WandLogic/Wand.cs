@@ -67,7 +67,7 @@ public class Wand : MonoBehaviour
     WandLoad PrepareLoad(int spellsToCast)
     {
         WandLoad load = new WandLoad();
-
+        load.Spread = _wandData.Spread;
         while (spellsToCast > 0)
         {
 
@@ -98,6 +98,7 @@ public class Wand : MonoBehaviour
             else if (spell is ModifierSpell modifier)
             {
                 load.Modifyers.Add(modifier);
+                spellsToCast++;
             }
             else if (spell is ProjectileSpell projectile)
             {
