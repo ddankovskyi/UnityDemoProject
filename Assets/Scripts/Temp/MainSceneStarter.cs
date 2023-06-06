@@ -54,6 +54,10 @@ public class MainSceneStarter : MonoBehaviour
         {
             Id = "Hasten"
         };
+        SpellItem Light = new SpellItem
+        {
+            Id = "Light"
+        };
 
 
         List<SpellItem> items = Enumerable.Repeat<SpellItem>(null, 14).ToList();
@@ -69,7 +73,7 @@ public class MainSceneStarter : MonoBehaviour
             CastDelay = 0.15f,
             RechargeTime = 0.2f,
             Spells = items,
-            Spread = 15f
+            Spread = 5f
         };
 
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
@@ -79,6 +83,7 @@ public class MainSceneStarter : MonoBehaviour
         inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 3, BaseSpell2);
         inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 4, Double);
         inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 5, Hasten);
+        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 6, Light);
         inventoryData.TypeSlots.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, typeof(WandItem));
         inventoryData.Items.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, wand);
 

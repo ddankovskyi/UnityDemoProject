@@ -8,7 +8,6 @@ public class Hasten : ModifierSpell
 {
     public override void Apply(ProjectileSpellGO projectileSpell, ProjectileSpellGO previousSpell)
     {
-        Debug.Log("Apply hasten");
         // Do Nothing
     }
 

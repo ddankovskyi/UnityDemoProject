@@ -9,6 +9,7 @@ public class HealthComponent : MonoBehaviour, IDamageble
     public event Action<Damage> OnDamageResived;
     public event Action OnDeath;
 
+    public bool IsAlive => CurrentHP > 0;
     public int MaxHP { get; set; } = 1;
     public int CurrentHP { get; set; } = -1;
 

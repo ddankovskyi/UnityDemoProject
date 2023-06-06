@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ProjectileSpell : Spell
 {
-
+    public ProjectileSpellGO Prefab;
     public float Speed;
     public float Lifetime;
 

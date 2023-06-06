@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] BaseEnemy _prefab;
+    [SerializeField] SimpleEnemy _prefab;
     [SerializeField] Character _character;
-    BaseEnemy _son;
+    SimpleEnemy _son;
   
     // Update is called once per frame
     void Update()
