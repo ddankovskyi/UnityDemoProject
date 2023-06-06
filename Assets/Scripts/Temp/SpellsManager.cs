@@ -13,6 +13,12 @@ public class SpellsManager : IGlobalManager
         return spell;
     }
 
+    public T GetSpellById<T>(string spellId) where T : Spell
+    {
+        T requiredSpell = GetSpellById(spellId) as T;
+        return requiredSpell;
+    }
+
     public void Init()
     {
         _spells = new Dictionary<string, Spell>();
