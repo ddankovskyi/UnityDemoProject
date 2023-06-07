@@ -11,21 +11,20 @@ public class CharacterInventoryUI : MonoBehaviour
     [SerializeField] WandUI _wandUIPrefab;
     [SerializeField] UniversalItemUI _universalItemUIPrefab;
 
-    IInventory<InventoryItem> _inventory;
+    CharacterInventoryManager _inventory;
     void Start()
     {
-        _inventory = Game.Get<IInventory<InventoryItem>>();
+        _inventory = Game.Get<CharacterInventoryManager>();
         InitStoredSpells();
         InitWands();
     }
     void InitWands()
     {
-        var inventory = Game.Get<IInventory<InventoryItem>>();
         int i = 1;
         _wandSlots.ForEach(wandSlot =>
         {
-            wandSlot.slotId = InventoryIds.WANDS_SLOTS_ID_PREFIX + i++;
-            if(inventory.Get(wandSlot.slotId) is WandItem wandItem)
+            wandSlot.slotId = CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + i++;
+            if(_inventory.Get(wandSlot.slotId) is WandItem wandItem)
             {
                 WandUI wandUI = Instantiate(_wandUIPrefab, wandSlot.transform);
                 wandUI.ParentForDragging = _parentForDragging;
@@ -38,9 +37,8 @@ public class CharacterInventoryUI : MonoBehaviour
 
     void InitStoredSpells()
     {
-        _storedSpells.Capacity = Game.Get<CharacterManager>().InventorySize;
-        _storedSpells.Init(InventoryIds.INVENTORY_SLOTS_ID_PREFIX);
-        _storedSpells.Slots.ForEach(slot =>
+        _storedSpells.Init(_inventory.InventorySlotIds);
+        foreach(var slot in _storedSpells.Slots.Values)
         {
             var item = _inventory.Get(slot.slotId);
             if (item != null)
@@ -50,6 +48,22 @@ public class CharacterInventoryUI : MonoBehaviour
                 itemUI.ParentForDragging = _parentForDragging;
                 slot.Init(itemUI);
             }
-        });
-    } 
+        }
+    }
+    public void UpdateSlot(string slotId) {
+
+        InventorySlotUI slot;
+        _storedSpells.Slots.TryGetValue(slotId, out slot);
+        if (slot == null) return;
+
+        var item = _inventory.Get(slotId);
+        if (slot.ContainedItem == null && item != null)
+        {
+            ItemUI itemUI = Instantiate(_universalItemUIPrefab, transform);
+            itemUI.Init(item);
+            itemUI.ParentForDragging = _parentForDragging;
+            slot.Init(itemUI);
+        }
+    }
+
 }

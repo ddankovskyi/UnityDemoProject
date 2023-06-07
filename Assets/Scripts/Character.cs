@@ -15,14 +15,18 @@ public class Character : MonoBehaviour
     PlayerInputActions.CharacterActions _inputActions;
     Camera _camera;
     CharacterController _characterController;
+    SpellItemsObjectsCollector _spellItemsObjectsCollector;
 
     void Start()
     {
         _camera = Camera.main;
-        WandItem wandItem = Game.Get<InventoryManager<InventoryItem>>().Get(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
+        WandItem wandItem = Game.Get<InventoryManager<InventoryItem>>().Get(CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
         _wand.Init(wandItem);
         _characterController = GetComponent<CharacterController>();
+        _spellItemsObjectsCollector = GetComponent<SpellItemsObjectsCollector>();
         InitInputs();
+        Game.Get<CharacterManager>().CurrentCharacter = this; // TODO make it safer probably
+
     }
 
     public void ResetWand()
@@ -36,7 +40,15 @@ public class Character : MonoBehaviour
     {
         _inputActions = new PlayerInputActions().Character;
         _inputActions.Enable();
+        _inputActions.Interact.performed += HandleInterractButtonPressed;
     }
+
+    void ReleaseInputs()
+    {
+        _inputActions.Interact.performed -= HandleInterractButtonPressed;
+    }
+
+    void HandleInterractButtonPressed(InputAction.CallbackContext context) => _spellItemsObjectsCollector.Collect();
 
     public void HandleShooting()
     {     
@@ -65,20 +77,19 @@ public class Character : MonoBehaviour
 
     void RotateToCursor()
     {
-        //var mousePos = _camera.ScreenToWorldPoint(_inputActions.Aim.ReadValue<Vector2>());  // TODO Change to new Input system
-        //mousePos.z = 0f;
-
+        
         var ray = _camera.ScreenPointToRay(_inputActions.Aim.ReadValue<Vector2>());
         if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Ground"))) // TODO get rid of string id
         {
             var dir = (hit.point - transform.position).normalized;
 
             transform.forward = dir;
-            //transform.LookAt(hit.point);
         }
-        //var dir = (mousePos - wand.transform.position).normalized;
-        //dir.z = 0;
-        //wand.transform.up = dir;
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseInputs();
     }
 
 }

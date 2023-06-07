@@ -15,12 +15,12 @@ public class MainSceneStarter : MonoBehaviour
         CharacterManager player = new CharacterManager();
 
         var inventoryData = CreateDebugInventoryData();
-        var inventory = new InventoryManager<InventoryItem>();
+        var inventory = new CharacterInventoryManager();
         var spellsManager = new SpellsManager();
         inventory.Load(inventoryData);
 
-        Game.Inint(inventory);
         Game.Inint(player);
+        Game.Inint(inventory);
         Game.Inint(spellsManager);
         
     }
@@ -79,13 +79,13 @@ public class MainSceneStarter : MonoBehaviour
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
         inventoryData.Items = new Dictionary<string, InventoryItem>();
         inventoryData.TypeSlots = new Dictionary<string, System.Type>();
-        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 1, BaseSpell1);
-        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 3, BaseSpell2);
-        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 4, Double);
-        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 5, Hasten);
-        inventoryData.Items.Add(InventoryIds.INVENTORY_SLOTS_ID_PREFIX + 6, Light);
-        inventoryData.TypeSlots.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, typeof(WandItem));
-        inventoryData.Items.Add(InventoryIds.WANDS_SLOTS_ID_PREFIX + 1, wand);
+        inventoryData.Items.Add(CharacterInventoryManager.INVENTORY_SLOTS_ID_PREFIX + 1, BaseSpell1);
+        inventoryData.Items.Add(CharacterInventoryManager.INVENTORY_SLOTS_ID_PREFIX + 3, BaseSpell2);
+        inventoryData.Items.Add(CharacterInventoryManager.INVENTORY_SLOTS_ID_PREFIX + 4, Double);
+        inventoryData.Items.Add(CharacterInventoryManager.INVENTORY_SLOTS_ID_PREFIX + 5, Hasten);
+        inventoryData.Items.Add(CharacterInventoryManager.INVENTORY_SLOTS_ID_PREFIX + 6, Light);
+        inventoryData.TypeSlots.Add(CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + 1, typeof(WandItem));
+        inventoryData.Items.Add(CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + 1, wand);
 
         return inventoryData;
     }

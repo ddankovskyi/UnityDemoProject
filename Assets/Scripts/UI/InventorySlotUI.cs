@@ -6,16 +6,11 @@ using UnityEngine.EventSystems;
 public class InventorySlotUI : SlotUI
 {
     [HideInInspector] public string slotId;
-    [HideInInspector] public string inventoryPageId;
 
     private void Start()
     {
         _inventory = Game.Get<IInventory<InventoryItem>>();
-        Debug.Log(gameObject.name + ": create inventory");
-        Debug.Log("_inventory us null " + (_inventory == null));
     }
-
-
 
 
     IInventory<InventoryItem> _inventory;

@@ -4,8 +4,8 @@
 public class SpellItem : InventoryItem
 {
     [JsonProperty]
-    public int ChargesLeft;
+    public int ChargesLeft = 1;
     [JsonProperty]
-    public int MaxCharges;
+    public int MaxCharges = 1;
 }
 
