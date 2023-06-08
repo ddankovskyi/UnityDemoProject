@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class SpellItemsObjectsCollector : MonoBehaviour
 {
-    public UnityEvent<String> OnItemCollecter;
+    public UnityEvent<string> OnItemCollecter;
     LinkedList<SpellItemObject> _items = new LinkedList<SpellItemObject>();
 
     CharacterInventoryManager _inventoryManager;

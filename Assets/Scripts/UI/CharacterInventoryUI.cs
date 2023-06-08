@@ -10,14 +10,31 @@ public class CharacterInventoryUI : MonoBehaviour
     [SerializeField] List<InventorySlotUI> _wandSlots;
     [SerializeField] WandUI _wandUIPrefab;
     [SerializeField] UniversalItemUI _universalItemUIPrefab;
+    [SerializeField] GameObject _inventoryUIConteiner;
 
     CharacterInventoryManager _inventory;
+    GameStateManager _gameStateManager;
     void Start()
     {
         _inventory = Game.Get<CharacterInventoryManager>();
         InitStoredSpells();
         InitWands();
+        _gameStateManager = Game.Get<GameStateManager>();
+        _gameStateManager.OnGameStateChanged += HandelGameStateChange;
+        _inventoryUIConteiner.SetActive(_gameStateManager.IsInState(GameState.Inventory));
+
     }
+
+    private void OnDestroy()
+    {
+        _gameStateManager.OnGameStateChanged -= HandelGameStateChange;
+    }
+
+    void HandelGameStateChange(GameState newState)
+    {
+        _inventoryUIConteiner.SetActive(newState == GameState.Inventory);
+    }
+
     void InitWands()
     {
         int i = 1;
@@ -51,7 +68,6 @@ public class CharacterInventoryUI : MonoBehaviour
         }
     }
     public void UpdateSlot(string slotId) {
-
         InventorySlotUI slot;
         _storedSpells.Slots.TryGetValue(slotId, out slot);
         if (slot == null) return;

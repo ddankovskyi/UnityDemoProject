@@ -23,8 +23,8 @@ public class DropZoneUI : MonoBehaviour, IDropHandler
                 _dropPosShift = Quaternion.Euler(0, 95, 0) * _dropPosShift;
                 var spellObject = Instantiate(spellItemObjectPrefab, dropPose, Quaternion.identity);
                 spellObject.Init(spellItem);
+                Destroy(eventData.pointerDrag);
             }
-            Destroy(eventData.pointerDrag);
         } 
     }
 }

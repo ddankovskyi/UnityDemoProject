@@ -12,21 +12,39 @@ public class Character : MonoBehaviour
 
 
     [SerializeField] private float _movespeed = 1f; // TODO take it form char manager
+    [SerializeField] Transform _firePoint;
     PlayerInputActions.CharacterActions _inputActions;
     Camera _camera;
     CharacterController _characterController;
     SpellItemsObjectsCollector _spellItemsObjectsCollector;
+    GameStateManager _gameStateManager;
+    public Transform Firepoint => _firePoint;
 
     void Start()
     {
         _camera = Camera.main;
         WandItem wandItem = Game.Get<InventoryManager<InventoryItem>>().Get(CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
-        _wand.Init(wandItem);
+        _wand.Init(wandItem, _firePoint);
         _characterController = GetComponent<CharacterController>();
         _spellItemsObjectsCollector = GetComponent<SpellItemsObjectsCollector>();
         InitInputs();
         Game.Get<CharacterManager>().CurrentCharacter = this; // TODO make it safer probably
+        _gameStateManager = Game.Get<GameStateManager>();
+        _gameStateManager.OnGameStateChanged += HandleGameStateChange;
+    }
 
+    void ReleaseSunscriptions()
+    {
+        _inputActions.Interact.performed -= HandleInterractButtonPressed;
+        _gameStateManager.OnGameStateChanged -= HandleGameStateChange;
+    }
+
+    void HandleGameStateChange(GameState newState)
+    {
+        if (_gameStateManager.IsInState(GameState.Play))
+        {
+            ResetWand();
+        }
     }
 
     public void ResetWand()
@@ -43,16 +61,13 @@ public class Character : MonoBehaviour
         _inputActions.Interact.performed += HandleInterractButtonPressed;
     }
 
-    void ReleaseInputs()
-    {
-        _inputActions.Interact.performed -= HandleInterractButtonPressed;
-    }
+ 
 
     void HandleInterractButtonPressed(InputAction.CallbackContext context) => _spellItemsObjectsCollector.Collect();
 
     public void HandleShooting()
     {     
-        if(_inputActions.Shoot.IsPressed())
+        if(_inputActions.Shoot.IsPressed() && _gameStateManager.IsInState(GameState.Play))
             _wand.Shoot();   
     }
 
@@ -89,7 +104,7 @@ public class Character : MonoBehaviour
 
     private void OnDestroy()
     {
-        ReleaseInputs();
+        ReleaseSunscriptions();
     }
 
 }

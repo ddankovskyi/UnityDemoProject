@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wand : MonoBehaviour
 {
 
-    [SerializeField] Transform _firePoint;
+    Transform _firePoint;
 
 
     WandItem _wandData;
@@ -28,9 +28,9 @@ public class Wand : MonoBehaviour
         _spellsIterator.Recharge();
     }
 
-    public void Init(WandItem wandItem)
+    public void Init(WandItem wandItem, Transform firePoint)
     {
-
+        _firePoint = firePoint;
         _wandData = wandItem;
         _currentMana = _wandData.Manapool;
         _readyToShootTime = DateTime.Now.AddSeconds(-1);

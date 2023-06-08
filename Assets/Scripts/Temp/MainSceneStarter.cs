@@ -22,6 +22,7 @@ public class MainSceneStarter : MonoBehaviour
         Game.Inint(player);
         Game.Inint(inventory);
         Game.Inint(spellsManager);
+        Game.Inint(new GameStateManager());
         
     }
 
@@ -73,7 +74,7 @@ public class MainSceneStarter : MonoBehaviour
             CastDelay = 0.15f,
             RechargeTime = 0.2f,
             Spells = items,
-            Spread = 5f
+            Spread = 0f
         };
 
         InventoryData<InventoryItem> inventoryData = new InventoryData<InventoryItem>();
