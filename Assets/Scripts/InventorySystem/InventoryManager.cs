@@ -19,7 +19,7 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
     {
         if (item == null)
         {
-            Debug.Log("Null item can't be placed. Use Extract instead");
+            Debug.Log("Null item can't be placed. If you want to remove item use Extract instead");
             return false;
         }
 
@@ -88,7 +88,8 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
         return existingitem;
     }
 
-    public void Init() { }
+
+    public virtual void Init() { }
 
     public void DebugPrint()
     {
