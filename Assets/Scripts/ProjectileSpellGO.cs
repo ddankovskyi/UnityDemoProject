@@ -9,30 +9,31 @@ public class ProjectileSpellGO : MonoBehaviour
     ProjectileSpell _spellData;
     [SerializeField] ParticleSystem _explosionPrefab;
 
-    Rigidbody2D _rigidbody;
+    Rigidbody _rigidbody;
     void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody = GetComponent<Rigidbody>();
         Destroy(gameObject, _spellData.Lifetime);
-        _rigidbody.AddRelativeForce(Vector2.up * _spellData.Speed, ForceMode2D.Impulse);
+        _rigidbody.AddForce(transform.forward * _spellData.Speed, ForceMode.Impulse);
 
     }
 
     void Explode()
     {
+        if (_explosionPrefab)
+        {
+            ParticleSystem particles = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            //particles.GetComponent<ParticleSystemRenderer>().material.SetTexture("_MainTex", _spellData.Icon.texture);
 
-        ParticleSystem particles = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-        particles.GetComponent<ParticleSystemRenderer>().material.SetTexture("_MainTex", _spellData.Icon.texture);
-
-        Destroy(particles.gameObject, 1); // TODO destroy properly
+            Destroy(particles.gameObject, 1); // TODO destroy properly
+        }
         Destroy(gameObject, 0.01f);
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         Explode();
-        
         collision.gameObject.GetComponent<IDamageble>()?.ReceiveDamage(new Damage(_spellData.Damage));
     }
 

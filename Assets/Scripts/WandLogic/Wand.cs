@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wand : MonoBehaviour
 {
 
-    [SerializeField] Transform _firePoint;
+    Transform _firePoint;
 
 
     WandItem _wandData;
@@ -28,9 +28,9 @@ public class Wand : MonoBehaviour
         _spellsIterator.Recharge();
     }
 
-    public void Init(WandItem wandItem)
+    public void Init(WandItem wandItem, Transform firePoint)
     {
-
+        _firePoint = firePoint;
         _wandData = wandItem;
         _currentMana = _wandData.Manapool;
         _readyToShootTime = DateTime.Now.AddSeconds(-1);
@@ -67,7 +67,7 @@ public class Wand : MonoBehaviour
     WandLoad PrepareLoad(int spellsToCast)
     {
         WandLoad load = new WandLoad();
-
+        load.Spread = _wandData.Spread;
         while (spellsToCast > 0)
         {
 
@@ -98,6 +98,7 @@ public class Wand : MonoBehaviour
             else if (spell is ModifierSpell modifier)
             {
                 load.Modifyers.Add(modifier);
+                spellsToCast++;
             }
             else if (spell is ProjectileSpell projectile)
             {

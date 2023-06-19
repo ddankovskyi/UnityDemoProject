@@ -42,19 +42,19 @@ public class WandLoad
 
         foreach (ProjectileSpell spell in Spells)
         {
-            var prefab = Game.Get<SpellsManager>().GetSpellById(spell.Id).Prefab;
-            var spellProjectile = Object.Instantiate(prefab, position, rotation);
+            ProjectileSpellGO prefab = Game.Get<SpellsManager>().GetSpellById<ProjectileSpell>(spell.Id).Prefab;
+            ProjectileSpellGO spellProjectile = Object.Instantiate(prefab, position, rotation);
             spellProjectile.InitSpell(spell);
             Transform projectileTransform = spellProjectile.transform;
             if (IsUsingFormation)
             {
-                projectileTransform.Rotate(new Vector3(0, 0, nextSpellAngle));
+                projectileTransform.Rotate(new Vector3(0, nextSpellAngle, 0));
                 nextSpellAngle += formationAngleStep;
             }
             else
             {
-                var randomAngle = Random.Range(-Spread, Spread);
-                projectileTransform.Rotate(new Vector3(0, 0, randomAngle));
+                var randomAngle = Random.Range(-Spread/2, Spread/2);
+                projectileTransform.Rotate(new Vector3(0, randomAngle, 0));
             }
 
             foreach (var modifier in Modifyers)

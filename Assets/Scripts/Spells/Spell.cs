@@ -6,7 +6,7 @@ public abstract class Spell : ScriptableObject
 {
     public string Id;
     public Sprite Icon; // For UI and pickable item
-    public ProjectileSpellGO Prefab;
+    [Space]
 
     public int ManaCost;
     public float CastDelay;

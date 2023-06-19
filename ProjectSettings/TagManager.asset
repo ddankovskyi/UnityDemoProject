@@ -14,17 +14,17 @@ TagManager:
   - UI
   - Projectile
   - 
+  - InterractableTriggers
+  - Character
+  - 
+  - Ground
   - 
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Cursor
   - 
   - 
   - 

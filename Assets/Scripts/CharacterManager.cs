@@ -2,8 +2,10 @@
 public class CharacterManager : IGlobalManager 
 {
     CharacterData _data;
+
+    public Character CurrentCharacter { get; set; }
    
-    public int InventorySize => _data.InventorySize;
+    public int InventoryCapasity => _data.InventorySize;
 
     public void Init()
     {
