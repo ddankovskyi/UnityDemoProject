@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class CharacterInventoryManager : InventoryManager<InventoryItem>
 {
     public const string INVENTORY_SLOTS_ID_PREFIX = "MainInventory_";
     public const string WANDS_SLOTS_ID_PREFIX = "Wand_";
+
+    public CharacterInventoryManager(InventoryData<InventoryItem> data) : base(data) { }
 
     public int InventoryCapasity { get; private set; }
 
@@ -22,11 +25,17 @@ public class CharacterInventoryManager : InventoryManager<InventoryItem>
         return null;
     }
 
+    public WandItem GetWandBySlotNumber(int slotNumber)
+    {
+        return Get(WANDS_SLOTS_ID_PREFIX + slotNumber) as WandItem;
+    } 
+
     public List<string> InventorySlotIds { get; private set; }
 
-    public override void Init()
+    [Inject]
+    public void Init(CharacterManager characterManager)
     {
-        InventoryCapasity = Game.Get<CharacterManager>().InventoryCapasity;
+        InventoryCapasity = characterManager.InventoryCapasity;
         InventorySlotIds = Enumerable.Range(0, InventoryCapasity)
             .Select(i => INVENTORY_SLOTS_ID_PREFIX + i)
             .ToList();

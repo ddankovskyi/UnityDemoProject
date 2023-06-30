@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 public class DropZoneUI : MonoBehaviour, IDropHandler
 {
-    [SerializeField] SpellItemObject spellItemObjectPrefab;
 
     Vector3 _dropPosShift = new Vector3(0,0,2);
+    Transform _character;
+    SpellItemObject.Factory _spellItemObjectFactory;
+    
+    [Inject]
+    void Init(CharacterManager characterManager, SpellItemObject.Factory spellItemObjectFactory)
+    {
+        _character = characterManager.CurrentCharacter.transform;
+        _spellItemObjectFactory = spellItemObjectFactory;
+    }
   
     public void OnDrop(PointerEventData eventData)
     {
@@ -18,10 +27,11 @@ public class DropZoneUI : MonoBehaviour, IDropHandler
             //eventData.pointerDrag.SetActive(false); // TODO : drop item instead
             if (itemUI.Item is SpellItem spellItem)
             {
-                Vector3 dropPose = Game.Get<CharacterManager>().CurrentCharacter.transform.position + _dropPosShift;
+                Vector3 dropPose = _character.position + _dropPosShift;
 
                 _dropPosShift = Quaternion.Euler(0, 95, 0) * _dropPosShift;
-                var spellObject = Instantiate(spellItemObjectPrefab, dropPose, Quaternion.identity);
+                var spellObject = _spellItemObjectFactory.Create();
+                spellObject.transform.position = dropPose;
                 spellObject.Init(spellItem);
                 Destroy(eventData.pointerDrag);
             }

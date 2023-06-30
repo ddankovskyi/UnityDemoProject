@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class Character : MonoBehaviour
 {
@@ -23,15 +24,20 @@ public class Character : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        WandItem wandItem = Game.Get<InventoryManager<InventoryItem>>().Get(CharacterInventoryManager.WANDS_SLOTS_ID_PREFIX + 1) as WandItem;
-        _wand.Init(wandItem, _firePoint);
         _characterController = GetComponent<CharacterController>();
         _spellItemsObjectsCollector = GetComponent<SpellItemsObjectsCollector>();
         InitInputs();
-        Game.Get<CharacterManager>().CurrentCharacter = this; // TODO make it safer probably
-        _gameStateManager = Game.Get<GameStateManager>();
+    }
+
+    [Inject]
+    void Init(CharacterInventoryManager characterInventory, GameStateManager gameStateManager)
+    {   
+        WandItem wandItem = characterInventory.GetWandBySlotNumber(1);
+        _wand.Init(wandItem, _firePoint);
+        _gameStateManager = gameStateManager;
         _gameStateManager.OnGameStateChanged += HandleGameStateChange;
     }
+
 
     void ReleaseSunscriptions()
     {

@@ -2,18 +2,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
+using Zenject;
 
 public class GlobalInputManager : MonoBehaviour
 {
 
     PlayerInputActions.GlobalActions _inputs;
+
+    [Inject]
     GameStateManager _gameStateManager;
 
     void Start()
     {
         InitInputs();
-        _gameStateManager = Game.Get<GameStateManager>();
-
     }
 
     void InitInputs()

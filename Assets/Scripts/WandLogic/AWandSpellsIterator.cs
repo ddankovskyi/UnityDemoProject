@@ -11,7 +11,7 @@ public abstract class AWandSpellsIterator
     }
 
     protected List<SpellItem> _spellItems;
-    public abstract Spell GetNext();
+    public abstract SpellItem GetNext();
 
     public abstract bool RechargeRequired { get; }
 
