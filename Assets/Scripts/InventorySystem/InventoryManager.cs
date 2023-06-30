@@ -9,6 +9,10 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
     Dictionary<string, T> Items => _data.Items;
     Dictionary<string, System.Type> TypeSlots => _data.TypeSlots;
 
+    public InventoryManager(InventoryData<T> data)
+    {
+        _data = data;
+    }
     public bool CheckCompatibility(string slotId, T item)
     {
         TypeSlots.TryGetValue(slotId, out var existingSlotType);
@@ -88,9 +92,6 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
         return existingitem;
     }
 
-
-    public virtual void Init() { }
-
     public void DebugPrint()
     {
         foreach (var key in Items.Keys)
@@ -102,10 +103,5 @@ public class InventoryManager<T> : IInventory<T> where T : class, IStackableItem
     public T ExtractAmount(string slotId, int amount)
     {
         throw new NotImplementedException();
-    }
-
-    public void Load(InventoryData<T> inventoryData)
-    {
-        _data = inventoryData;
     }
 }

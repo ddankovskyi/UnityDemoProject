@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Zenject;
 using static UnityEditor.Progress;
 
 public class SpellItemObject : MonoBehaviour
@@ -10,6 +11,8 @@ public class SpellItemObject : MonoBehaviour
     [SerializeField] Renderer _renderer;
     [SerializeField] Spell _spell;
     Texture2D _itemIcon;
+    [Inject] SpellsManager _spellsManager;
+
 
     public SpellItem SpellItem { get; private set; }
     Animator _animator;
@@ -19,7 +22,7 @@ public class SpellItemObject : MonoBehaviour
     public void Init(SpellItem item)
     {
         SpellItem = item;
-        _itemIcon = Game.Get<SpellsManager>().GetSpellById(item.Id).Icon.texture;
+        _itemIcon = _spellsManager.GetSpellById(item.Id).Icon.texture;
     }
 
     void Start()
@@ -27,7 +30,7 @@ public class SpellItemObject : MonoBehaviour
         if(SpellItem == null && _spell != null) {
             SpellItem = new SpellItem();
             SpellItem.Id = _spell.Id;
-            _itemIcon = Game.Get<SpellsManager>().GetSpellById(_spell.Id).Icon.texture;
+            _itemIcon = _spellsManager.GetSpellById(_spell.Id).Icon.texture;
         }
         var materialBlock = new MaterialPropertyBlock();
         materialBlock.SetTexture("_SpellIcon", _itemIcon);
@@ -58,4 +61,6 @@ public class SpellItemObject : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public class Factory : PlaceholderFactory<SpellItemObject> { };
 }

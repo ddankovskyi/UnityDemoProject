@@ -1,22 +1,15 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using Zenject;
 
 public class InventorySlotUI : SlotUI
 {
     [HideInInspector] public string slotId;
 
-    private void Start()
-    {
-        _inventory = Game.Get<IInventory<InventoryItem>>();
-    }
-
-
-    IInventory<InventoryItem> _inventory;
+    [Inject] CharacterInventoryManager _inventory;
     public void Init(ItemUI itemUI, bool checkContent = true)
     {
-        if(_inventory == null) _inventory = Game.Get<IInventory<InventoryItem>>(); // TODO better solution? 
         if (checkContent)
         {
             InventoryItem expected = _inventory.Get(slotId);
@@ -98,4 +91,5 @@ public class InventorySlotUI : SlotUI
         _inventory.Extract(slotId);
     }
 
+    public class Factory : PlaceholderFactory<InventorySlotUI> {}
 }

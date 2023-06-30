@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class WandUI : ItemUI
 {
     [SerializeField] Transform _spellSlotsParent;
-    [SerializeField] WandSpellSlotUI _wandSpellSlotPrefab;
-    [SerializeField] UniversalItemUI _itemPrefab;
+
+    [Inject] UniversalItemUI.Factory _itemFactory;
+    [Inject] WandSpellSlotUI.Factory _wandSpellSlotFactory;
 
     List<WandSpellSlotUI> _spellSlots = new List<WandSpellSlotUI>();
     WandItem _wandData;
@@ -22,7 +24,8 @@ public class WandUI : ItemUI
         for (int i = 0; i < _wandData.Spells.Count; i++)
         {
 
-            WandSpellSlotUI spellSlotUI = Instantiate(_wandSpellSlotPrefab, _spellSlotsParent);
+            WandSpellSlotUI spellSlotUI = _wandSpellSlotFactory.Create();
+            spellSlotUI.transform.SetParent(_spellSlotsParent, false);
             spellSlotUI.Init(i);
             spellSlotUI.gameObject.name = "Spell slot " + i;
             spellSlotUI.OnItemChanged += OnSlotStatusChanged;
@@ -31,7 +34,8 @@ public class WandUI : ItemUI
             if (_wandData.Spells[i] != null)
             {
                 //UniversalItemUI item = Instantiate(_itemPrefab, transform);
-                UniversalItemUI item = Instantiate(_itemPrefab, spellSlotUI.transform);
+                UniversalItemUI item = _itemFactory.Create();
+                item.transform.SetParent(transform, false);
                 item.ParentForDragging = ParentForDragging;
                 item.Init(_wandData.Spells[i]);
                 spellSlotUI.Init(item);
@@ -47,6 +51,8 @@ public class WandUI : ItemUI
         _wandData.Spells[slotId] = newSpell;
         Wand?.ResetState(); // TODO temp solution, remove later
     }
+
+    public class Factory : PlaceholderFactory<WandUI> { };
 
 
 }

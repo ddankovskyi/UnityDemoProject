@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class Cursor2d : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Cursor2d : MonoBehaviour
     Camera _camera;
     bool _isActive;
     [SerializeField] Image _image;
-    GameStateManager _gameStateManager;
+    [Inject] GameStateManager _gameStateManager;
     RectTransform _rectTransform;
 
     void Start()
@@ -19,7 +20,6 @@ public class Cursor2d : MonoBehaviour
         InitInputs();
         _camera = Camera.main;
         Cursor.visible = false;
-        _gameStateManager = Game.Get<GameStateManager>();
         _gameStateManager.OnGameStateChanged += HandleGameStateChange;
         _isActive = _gameStateManager.IsInState(GameState.Inventory);
         _image.enabled = _isActive;

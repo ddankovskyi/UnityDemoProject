@@ -42,7 +42,7 @@ public class WandLoad
 
         foreach (ProjectileSpell spell in Spells)
         {
-            ProjectileSpellGO prefab = Game.Get<SpellsManager>().GetSpellById<ProjectileSpell>(spell.Id).Prefab;
+            ProjectileSpellGO prefab = spell.Prefab;
             ProjectileSpellGO spellProjectile = Object.Instantiate(prefab, position, rotation);
             spellProjectile.InitSpell(spell);
             Transform projectileTransform = spellProjectile.transform;
