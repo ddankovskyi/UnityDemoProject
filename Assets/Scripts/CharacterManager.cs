@@ -1,5 +1,5 @@
 
-public class CharacterManager : IGlobalManager 
+public class CharacterManager 
 {
     CharacterData _data;
 
@@ -7,8 +7,9 @@ public class CharacterManager : IGlobalManager
    
     public int InventoryCapasity => _data.InventorySize;
 
-    public void Init()
+    public CharacterManager(CharacterData characterData, Character character)
     {
-        _data = new CharacterData();// TODO load _data from storage;
+        _data = characterData;
+        CurrentCharacter = character;
     }
 }

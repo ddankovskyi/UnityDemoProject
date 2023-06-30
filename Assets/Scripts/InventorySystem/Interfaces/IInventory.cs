@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IInventory<ItemType> : IGlobalManager where ItemType : IStackableItem
+public interface IInventory<ItemType> where ItemType : IStackableItem
 {
     public bool CreateTypeslot(System.Type type, string slotId);
     public void DeleteTypeslot(string slotId);

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using Zenject;
 
 public class Wand : MonoBehaviour
 {
@@ -18,6 +18,10 @@ public class Wand : MonoBehaviour
 
 
     AWandSpellsIterator _spellsIterator;
+
+    [Inject]
+    private SpellsManager _spellManager;
+
     private void Update()
     {
         RegenMana();
@@ -70,8 +74,8 @@ public class Wand : MonoBehaviour
         load.Spread = _wandData.Spread;
         while (spellsToCast > 0)
         {
-
-            var spell = _spellsIterator.GetNext();
+            SpellItem spellItem = _spellsIterator.GetNext();
+            Spell spell = _spellManager.GetSpellById(spellItem.Id);
             if (spell == null)
             {
                 return load;

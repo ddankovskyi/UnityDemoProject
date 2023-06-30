@@ -1,11 +1,11 @@
 ﻿using System;
+using Zenject;
 
 public class WandSpellSlotUI : SlotUI
 {
-    Wand _wand;
     int _slotId;
 
-    public Action<int, SpellItem> OnItemChanged; 
+    public event Action<int, SpellItem> OnItemChanged; 
 
     public void Init(int slitId)
     {
@@ -28,6 +28,7 @@ public class WandSpellSlotUI : SlotUI
     {
         base.ReleaseSlot();
         OnItemChanged?.Invoke(_slotId, null);
-
     }
+
+    public class Factory : PlaceholderFactory<WandSpellSlotUI> { }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpellsManager : IGlobalManager
+public class SpellsManager
 {
     Dictionary<string, Spell> _spells;
 
@@ -19,7 +19,7 @@ public class SpellsManager : IGlobalManager
         return requiredSpell;
     }
 
-    public void Init()
+    public SpellsManager()
     {
         _spells = new Dictionary<string, Spell>();
         Resources.LoadAll<Spell>("ScriptableObjects/Spells").ToList().ForEach(

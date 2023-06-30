@@ -3,17 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Zenject;
 
 public class SpellItemsObjectsCollector : MonoBehaviour
 {
     public UnityEvent<string> OnItemCollecter;
     LinkedList<SpellItemObject> _items = new LinkedList<SpellItemObject>();
 
-    CharacterInventoryManager _inventoryManager;
-    private void Start()
-    {
-        _inventoryManager = Game.Get<CharacterInventoryManager>();
-    }
+    [Inject] CharacterInventoryManager _inventoryManager;
+
     public void SetObjectAvailable(SpellItemObject spellObject)
     {
         if (_items.Count == 0)

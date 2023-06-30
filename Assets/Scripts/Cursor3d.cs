@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
+using Zenject;
 
 public class Cursor3d : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Cursor3d : MonoBehaviour
     Camera _camera;
     bool _isActive;
     Renderer _renderer;
+    Transform _firepoint;
+
     GameStateManager _gameStateManager;
 
     //Transform _firePointTransform;
@@ -22,10 +25,16 @@ public class Cursor3d : MonoBehaviour
         InitInputs();
         _camera = Camera.main;
         Cursor.visible = false;
-        _gameStateManager = Game.Get<GameStateManager>();
         _gameStateManager.OnGameStateChanged += HandleGameStateChange;
         _isActive = _gameStateManager.IsInState(GameState.Play);
         //_firePointTransform = Game.Get<CharacterManager>().CurrentCharacter.Firepoint;
+    }
+
+    [Inject]
+    void InitFirePoint(CharacterManager characterManager, GameStateManager gameStateManager)
+    {
+        _firepoint = characterManager.CurrentCharacter?.Firepoint;
+        _gameStateManager = gameStateManager;
     }
 
     private void OnDestroy()
@@ -51,7 +60,7 @@ public class Cursor3d : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, LayerMask.GetMask("Ground"))) // TODO get rid of string id
         {
             Vector3 pos = hit.point;
-            pos.y = Game.Get<CharacterManager>().CurrentCharacter.Firepoint.position.y;
+            pos.y = _firepoint.position.y;
             transform.position = pos;
             Debug.DrawLine(_camera.transform.position, hit.point);
         }

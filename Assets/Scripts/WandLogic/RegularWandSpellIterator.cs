@@ -11,7 +11,7 @@ public class RegularWandSpellIterator : AWandSpellsIterator
 
     public override bool RechargeRequired => _rechargeRequired;
 
-    public override Spell GetNext()
+    public override SpellItem GetNext()
     {
         SpellItem nextSpellItem = null;
         while (nextSpellItem == null)
@@ -23,10 +23,8 @@ public class RegularWandSpellIterator : AWandSpellsIterator
             }
             nextSpellItem = _spellItems[_spellsQuePointer++];
         }
-        var res = Game.Get<SpellsManager>().GetSpellById(nextSpellItem.Id);
-
         _rechargeRequired = !CheckIfHasNext();
-        return res;
+        return nextSpellItem;
     }
 
     bool CheckIfHasNext()
