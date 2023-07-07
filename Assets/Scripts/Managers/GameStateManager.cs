@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStateManager : IGlobalManager
+public class GameStateManager
 {
    
 
@@ -20,7 +20,6 @@ public class GameStateManager : IGlobalManager
         CurrentState = newState;
         OnGameStateChanged?.Invoke(CurrentState);
     }
-    public void Init() { } 
     
 }
 
