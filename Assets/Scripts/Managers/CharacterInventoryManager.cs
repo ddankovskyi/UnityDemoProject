@@ -33,9 +33,9 @@ public class CharacterInventoryManager : InventoryManager<InventoryItem>
     public List<string> InventorySlotIds { get; private set; }
 
     [Inject]
-    public void Init(CharacterManager characterManager)
+    public void Init(Storage storage)
     {
-        InventoryCapasity = characterManager.InventoryCapasity;
+        InventoryCapasity = storage.Get<CharacterData>().InventorySize;
         InventorySlotIds = Enumerable.Range(0, InventoryCapasity)
             .Select(i => INVENTORY_SLOTS_ID_PREFIX + i)
             .ToList();

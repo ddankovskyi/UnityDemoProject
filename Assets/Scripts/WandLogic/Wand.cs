@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.UIElements;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +12,7 @@ public class Wand : MonoBehaviour
     WandItem _wandData;
     float _currentMana;
     public float CurrentMana => _currentMana;
-
+    public float MaxMana => _wandData.Manapool;
     DateTime _readyToShootTime;
 
     bool IsReadyToShoot => _readyToShootTime < DateTime.Now;
@@ -75,11 +76,11 @@ public class Wand : MonoBehaviour
         while (spellsToCast > 0)
         {
             SpellItem spellItem = _spellsIterator.GetNext();
-            Spell spell = _spellManager.GetSpellById(spellItem.Id);
-            if (spell == null)
+            if (spellItem == null)
             {
                 return load;
             }
+            Spell spell = _spellManager.GetSpellById(spellItem.Id);
 
             if (spell.ManaCost > _currentMana)
                 continue;

@@ -15,13 +15,14 @@ public class MainInstaller : MonoInstaller
     public override void InstallBindings()
     {
 
-        Container.Bind<CharacterManager>().AsSingle().WithArguments(new CharacterData(), _character);
+        Container.Bind<CharacterManager>().AsSingle().WithArguments(_character);
         
         var inventoryData = DebugInventoryLoader.CreateDebugInventoryData();
         Container.Bind<CharacterInventoryManager>().AsSingle().WithArguments(inventoryData);
 
         Container.Bind<SpellsManager>().AsSingle();
         Container.Bind<GameStateManager>().AsSingle();
+        Container.Bind<Storage>().AsSingle();
 
         Container.BindFactory<UniversalItemUI, UniversalItemUI.Factory>().FromComponentInNewPrefab(_universalItemUIPrefab);
         Container.BindFactory<InventorySlotUI, InventorySlotUI.Factory>().FromComponentInNewPrefab(_inventorySlotUIPrefab);
